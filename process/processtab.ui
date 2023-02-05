@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>500</height>
+    <width>710</width>
+    <height>480</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>600</width>
+    <width>710</width>
     <height>480</height>
    </size>
   </property>
@@ -48,7 +48,7 @@
     <rect>
      <x>110</x>
      <y>30</y>
-     <width>501</width>
+     <width>531</width>
      <height>291</height>
     </rect>
    </property>
@@ -247,7 +247,7 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>250</x>
+     <x>330</x>
      <y>0</y>
      <width>81</width>
      <height>21</height>

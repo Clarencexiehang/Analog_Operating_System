@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1300</width>
+    <width>1500</width>
     <height>900</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>1300</width>
+    <width>1500</width>
     <height>900</height>
    </size>
   </property>
@@ -29,13 +29,13 @@
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>620</width>
+      <width>720</width>
       <height>500</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>620</width>
+      <width>720</width>
       <height>500</height>
      </size>
     </property>
@@ -47,7 +47,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>618</width>
+       <width>718</width>
        <height>498</height>
       </rect>
      </property>
@@ -58,13 +58,13 @@
      <rect>
       <x>20</x>
       <y>530</y>
-      <width>620</width>
-      <height>310</height>
+      <width>720</width>
+      <height>321</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>620</width>
+      <width>720</width>
       <height>310</height>
      </size>
     </property>
@@ -76,8 +76,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>618</width>
-       <height>308</height>
+       <width>718</width>
+       <height>319</height>
       </rect>
      </property>
     </widget>
@@ -85,15 +85,15 @@
    <widget class="QScrollArea" name="memoryArea">
     <property name="geometry">
      <rect>
-      <x>660</x>
+      <x>760</x>
       <y>10</y>
-      <width>620</width>
+      <width>720</width>
       <height>300</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>620</width>
+      <width>720</width>
       <height>300</height>
      </size>
     </property>
@@ -105,7 +105,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>618</width>
+       <width>718</width>
        <height>298</height>
       </rect>
      </property>
@@ -114,15 +114,15 @@
    <widget class="QScrollArea" name="fileArea">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>330</y>
-      <width>620</width>
+      <x>760</x>
+      <y>320</y>
+      <width>720</width>
       <height>300</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>620</width>
+      <width>720</width>
       <height>300</height>
      </size>
     </property>
@@ -134,7 +134,7 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>618</width>
+       <width>718</width>
        <height>298</height>
       </rect>
      </property>
@@ -143,16 +143,16 @@
    <widget class="QScrollArea" name="equipArea">
     <property name="geometry">
      <rect>
-      <x>660</x>
-      <y>650</y>
-      <width>620</width>
-      <height>181</height>
+      <x>760</x>
+      <y>640</y>
+      <width>720</width>
+      <height>211</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>620</width>
-      <height>150</height>
+      <width>720</width>
+      <height>180</height>
      </size>
     </property>
     <property name="widgetResizable">
@@ -163,8 +163,8 @@
       <rect>
        <x>0</x>
        <y>0</y>
-       <width>618</width>
-       <height>179</height>
+       <width>718</width>
+       <height>209</height>
       </rect>
      </property>
     </widget>
@@ -175,7 +175,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1300</width>
+     <width>1500</width>
      <height>26</height>
     </rect>
    </property>

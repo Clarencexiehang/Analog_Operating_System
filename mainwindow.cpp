@@ -5,8 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);//setFixedSize(1920,1080);
-    setFixedSize(1300,900);
+    ui->setupUi(this);setFixedSize(1500,900);
+    //setFixedSize(1300,900);
     setWindowTitle("模拟操作系统");
 
     //添加每个管理页面
