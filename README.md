@@ -82,3 +82,77 @@ mainwindow.ui
 * equipment.h
 * equipment.cpp
 * equipment.ui
+
+<br/>
+
+5. 磁盘管理
+
+* disk.h
+* disk.cpp
+* disk.ui
+
+
+
+此处这么设计，可能不错
+
+![image-20230205210350357](https://xiehangblog.oss-cn-beijing.aliyuncs.com/pic/202302052103401.png)
+
+
+
+<br/><br/>
+
+## （三）开发流程
+
+### 分模块
+
+MainWindow主窗口定义了五个板块的接口：
+
+```cpp
+ ProcessTab *processTab;
+ Memory *memoryTab;
+ File *fileTab;
+ Equipment *equipmentTab;
+ Disk *diskTab;
+
+```
+
+<br/>
+
+每个模块都有属于自己的类，分模块方便开发，减少混淆带来的麻烦
+
+<br/>
+
+### 关于数据共享
+
+不同的类之间共享数据，通常可以考虑：
+
+* 某变量设置为全局变量，然后extern声明
+
+  如下，通过全局变量w, 共享readyQueue队列
+
+```cpp
+//根据优先级排序，放入就绪队列
+extern MainWindow *w;
+    w->processTab->readyQueue.push_back(process);
+    sort(w->processTab->readyQueue.begin(),w->processTab->readyQueue.end(), ProcessTab::compare);
+
+```
+
+* 包含某个类的文件，然后使用其函数
+
+* 利用信号与槽
+
+  如下，在对话框更改了另一个process的界面
+
+  ```cpp
+  //更新表格
+  connect(this,SIGNAL(sendToShowProcess()),w->processTab,SLOT(showProcess()));
+  emit this->sendToShowProcess();
+  ```
+
+<br/><br/>
+
+## （四）效果展示
+
+![image-20230205211257133](https://xiehangblog.oss-cn-beijing.aliyuncs.com/pic/202302052112195.png)
+

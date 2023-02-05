@@ -33,7 +33,8 @@ SOURCES += \
     file.cpp \
     processtab.cpp \
     processdialog.cpp \
-    pcb.cpp
+    pcb.cpp \
+    disk.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -42,7 +43,8 @@ HEADERS += \
     file.h \
     processtab.h \
     processdialog.h \
-    pcb.h
+    pcb.h \
+    disk.h
 
 
 FORMS += \
@@ -51,7 +53,8 @@ FORMS += \
     equipment.ui \
     file.ui \
     processtab.ui \
-    processdialog.ui
+    processdialog.ui \
+    disk.ui
 
 
 # Default rules for deployment.

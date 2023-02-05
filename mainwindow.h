@@ -6,6 +6,7 @@
 #include "memory.h"
 #include "equipment.h"
 #include "file.h"
+#include "disk.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +21,7 @@ public:
     Memory *memoryTab;
     File *fileTab;
     Equipment *equipmentTab;
+    Disk *diskTab;
 
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();

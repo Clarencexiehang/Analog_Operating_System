@@ -59,8 +59,6 @@ void processDialog::on_pushButton_ok_clicked()
     extern MainWindow *w;
     w->processTab->readyQueue.push_back(process);
     sort(w->processTab->readyQueue.begin(),w->processTab->readyQueue.end(), ProcessTab::compare);
-    qDebug()<<"更新表格";
-    qDebug()<<w->processTab->test;
     //更新表格
     connect(this,SIGNAL(sendToShowProcess()),w->processTab,SLOT(showProcess()));
     emit this->sendToShowProcess();
