@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include <QApplication>
-#include "pcb.h"
+#include "process/pcb.h"
 #include "vector"
 #include "time.h"
 

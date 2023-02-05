@@ -2,11 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "processtab.h"
-#include "memory.h"
-#include "equipment.h"
-#include "file.h"
-#include "disk.h"
+#include "process/processtab.h"
+#include "memory/memory.h"
+#include "equipment/equipment.h"
+#include "file/file.h"
+#include "disk/disk.h"
 
 namespace Ui {
 class MainWindow;
