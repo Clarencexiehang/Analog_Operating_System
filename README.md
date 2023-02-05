@@ -154,5 +154,4 @@ extern MainWindow *w;
 
 ## （四）效果展示
 
-![image-20230205211257133](https://xiehangblog.oss-cn-beijing.aliyuncs.com/pic/202302052112195.png)
-
+![image-20230205212305169](https://xiehangblog.oss-cn-beijing.aliyuncs.com/pic/202302052123236.png)

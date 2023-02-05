@@ -51,19 +51,6 @@
        <height>498</height>
       </rect>
      </property>
-     <widget class="QLabel" name="label">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>0</y>
-        <width>81</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>CPU状况</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QScrollArea" name="diskArea">
@@ -93,19 +80,6 @@
        <height>308</height>
       </rect>
      </property>
-     <widget class="QLabel" name="label_2">
-      <property name="geometry">
-       <rect>
-        <x>250</x>
-        <y>10</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>磁盘状态</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QScrollArea" name="memoryArea">
@@ -135,19 +109,6 @@
        <height>298</height>
       </rect>
      </property>
-     <widget class="QLabel" name="label_3">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>10</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>内存状态</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QScrollArea" name="fileArea">
@@ -177,19 +138,6 @@
        <height>298</height>
       </rect>
      </property>
-     <widget class="QLabel" name="label_7">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>10</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>文件管理</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QScrollArea" name="equipArea">
@@ -219,19 +167,6 @@
        <height>179</height>
       </rect>
      </property>
-     <widget class="QLabel" name="label_8">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>10</y>
-        <width>72</width>
-        <height>15</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>设备管理</string>
-      </property>
-     </widget>
     </widget>
    </widget>
   </widget>
