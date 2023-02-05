@@ -26,35 +26,38 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    memory.cpp \
-    equipment.cpp \
-    file.cpp \
-    processtab.cpp \
-    processdialog.cpp \
-    pcb.cpp \
-    disk.cpp
+    disk/disk.cpp \
+    equipment/equipment.cpp \
+    file/file.cpp \
+    memory/memory.cpp \
+    process/pcb.cpp \
+    process/processdialog.cpp \
+    process/processtab.cpp \
+    main.cpp \
+    mainwindow.cpp
+
 
 HEADERS += \
-        mainwindow.h \
-    memory.h \
-    equipment.h \
-    file.h \
-    processtab.h \
-    processdialog.h \
-    pcb.h \
-    disk.h
+    disk/disk.h \
+    equipment/equipment.h \
+    file/file.h \
+    memory/memory.h \
+    process/pcb.h \
+    process/processdialog.h \
+    process/processtab.h \
+    mainwindow.h
+
 
 
 FORMS += \
-        mainwindow.ui \
-    memory.ui \
-    equipment.ui \
-    file.ui \
-    processtab.ui \
-    processdialog.ui \
-    disk.ui
+    disk/disk.ui \
+    equipment/equipment.ui \
+    file/file.ui \
+    memory/memory.ui \
+    process/processdialog.ui \
+    process/processtab.ui \
+    mainwindow.ui
+
 
 
 # Default rules for deployment.
@@ -63,4 +66,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
+    pics.qrc \
     pics.qrc
+
+SUBDIRS += \
+    OS.pro
+
+DISTFILES += \
+    pics/tubiao.jpg \
+    README.md \
+    LICENSE

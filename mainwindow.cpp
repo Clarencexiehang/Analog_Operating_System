@@ -5,7 +5,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);//setFixedSize(1920,1080);
     setFixedSize(1300,900);
     setWindowTitle("模拟操作系统");
 

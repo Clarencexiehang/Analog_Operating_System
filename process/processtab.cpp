@@ -58,7 +58,7 @@ void ProcessTab::showProcess(){
 }
 
 void ProcessTab::Random_Create_PCB(){
-    for(int i=0;i<8;i++){
+    for(int i=0;i<3;i++){
         PCB* p = nullptr;
         string name = "process"+to_string(i);
         insertReadyQueue(p,name);
@@ -112,7 +112,7 @@ void ProcessTab::on_start_clicked()
     showProcess();
 }
 
-
+//暂停按钮
 void ProcessTab::on_pause_clicked(bool checked)
 {
     if(checked){
@@ -121,4 +121,39 @@ void ProcessTab::on_pause_clicked(bool checked)
         ui->pause->setStyleSheet("background-color:rgb(253,253,253)");
     }
 
+}
+
+//动态优先级时间片轮转法
+void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
+    runningQueue.erase(runningQueue.begin());
+
+    int tempPrio;
+
+    strcpy(process->state, "running");
+        //如果进程的所需执行时间<时间片，则优先级返回0
+        if(process->needTime<process->round){
+            process->cpuTime += process->needTime;
+            process->needTime=0;
+            tempPrio=0;
+        } else{
+            process->needTime -= process->round;
+            process->cpuTime += process->round;
+            tempPrio = process->prio;
+            process->prio = maxPrio;     //运行时的进程优先级最大
+        }
+
+    //将时间片轮转的进程重新放入就绪队列中
+    for(int i=0;i< readyQueue.size();i++){
+        readyQueue[i]->prio+=2;     //就绪队列中所有进程优先级提高2
+    }
+    if(tempPrio == 0){
+        strcpy(process->state, "finished");
+        finishQueue.push_back(process);
+        qDebug()<<"进程 "<<QString::fromStdString(process->name)<<" 执行完毕！"<<endl;
+    }else{
+        process->prio = tempPrio-2;
+        strcpy(process->state, "ready");
+        readyQueue.push_back(process);
+        sort(readyQueue.begin(),readyQueue.end(), compare);
+    }
 }

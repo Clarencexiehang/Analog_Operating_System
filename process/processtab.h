@@ -24,6 +24,7 @@ public:
     static bool compare(PCB* a,PCB* b);
     void Random_Create_PCB();
     void insertReadyQueue(PCB* process,string name);
+    void Dynamic_Priority_Time_Slice_Rotation(PCB* process);        //动态优先级时间片轮转法
     QString test = "P!!!";
 
 
