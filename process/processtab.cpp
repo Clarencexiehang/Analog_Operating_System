@@ -150,7 +150,6 @@ void ProcessTab::FCFS(){
         visitpage<<QString::number(readyQueue[0]->visit_pages[i]);
     }
     ui->listWidget->setViewMode(QListView::IconMode);
-    ui->listWidget->setStyleSheet("margin-left:10px");
     ui->listWidget->addItems(visitpage);
 }
 
