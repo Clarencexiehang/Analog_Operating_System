@@ -30,13 +30,13 @@
       <x>20</x>
       <y>10</y>
       <width>720</width>
-      <height>631</height>
+      <height>620</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
       <width>720</width>
-      <height>500</height>
+      <height>620</height>
      </size>
     </property>
     <property name="widgetResizable">
@@ -48,7 +48,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>629</height>
+       <height>618</height>
       </rect>
      </property>
     </widget>
@@ -57,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>651</y>
+      <y>641</y>
       <width>720</width>
       <height>200</height>
      </rect>
@@ -88,13 +88,13 @@
       <x>760</x>
       <y>10</y>
       <width>720</width>
-      <height>300</height>
+      <height>250</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
       <width>720</width>
-      <height>300</height>
+      <height>250</height>
      </size>
     </property>
     <property name="widgetResizable">
@@ -106,7 +106,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>298</height>
+       <height>248</height>
       </rect>
      </property>
     </widget>
@@ -115,7 +115,7 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>320</y>
+      <y>280</y>
       <width>720</width>
       <height>250</height>
      </rect>
@@ -144,9 +144,9 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>580</y>
+      <y>540</y>
       <width>720</width>
-      <height>271</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -164,7 +164,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>269</height>
+       <height>289</height>
       </rect>
      </property>
     </widget>

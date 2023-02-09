@@ -6,16 +6,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setFixedSize(1500,900);
+    setFixedSize(1500,800);
     setWindowTitle("模拟操作系统");
-
     //添加每个管理页面
     processTab=new ProcessTab(this);
     memoryTab=new Memory(this);
     fileTab = new File(this);
     equipmentTab = new Equipment(this);
     diskTab = new Disk(this);
-
     ui->processArea->setWidget(processTab);
     ui->memoryArea->setWidget(memoryTab);
     ui->fileArea->setWidget(fileTab);
