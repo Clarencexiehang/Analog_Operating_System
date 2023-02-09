@@ -9,12 +9,14 @@ using namespace std;
 class PCB
 {
 public:
-    string name;        /*进程标识符*/
-    int prio;           /*进程优先数*/
-    int round;          /*进程时间片轮转时间片*/
-    int cpuTime;        /*进程占用 CPU 时间*/
-    int needTime;       /*进程到完成还需要的时间*/
-    char state[10];     /*进程的状态*/
+    string name;            /*进程标识符*/
+    int prio;               /*进程优先数*/
+    int round;              /*进程时间片轮转时间片*/
+    int cpuTime;            /*进程占用 CPU 时间*/
+    int needTime;           /*进程到完成还需要的时间*/
+    char state[10];         /*进程的状态*/
+    string equip;           /*使用设备*/
+    int visit_pages[10];    /*进程访问的页面顺序*/
 
 public:
     PCB();

@@ -17,9 +17,9 @@ ProcessTab::ProcessTab(QWidget *parent) :
     ui->setupUi(this);
 
     //进程表格
-    ui->processtable->setColumnCount(5);
+    ui->processtable->setColumnCount(6);
     QStringList tableheader;
-    tableheader<<"进程标识码"<<"优先级"<<"占用CPU时间"<<"还需CPU时间"<<"进程状态";
+    tableheader<<"进程标识码"<<"优先级"<<"运行时间"<<"还需CPU时间"<<"进程状态"<<"使用设备";
     ui->processtable->horizontalHeader()->setMinimumHeight(50);
     ui->processtable->setHorizontalHeaderLabels(tableheader);
     ui->processtable->verticalHeader()->setVisible(false);
@@ -45,15 +45,16 @@ void ProcessTab::showProcess(){
     for(unsigned int i=0;i<readyQueue.size();i++){
         int nCount = ui->processtable->rowCount();
         ui->processtable->insertRow(nCount);
-        ui->processtable->setItem(i,0,new QTableWidgetItem(QString::fromStdString( readyQueue[i]->name)));
-        ui->processtable->setItem(i,1,new QTableWidgetItem(QString::number(readyQueue[i]->prio)));
-        ui->processtable->setItem(i,2,new QTableWidgetItem(QString::number(readyQueue[i]->cpuTime)));
-        ui->processtable->setItem(i,3,new QTableWidgetItem(QString::number(readyQueue[i]->needTime)));
-        ui->processtable->setItem(i,4,new QTableWidgetItem(QString::fromStdString(readyQueue[i]->state)));
+        ui->processtable->setItem(int(i),0,new QTableWidgetItem(QString::fromStdString( readyQueue[i]->name)));
+        ui->processtable->setItem(int(i),1,new QTableWidgetItem(QString::number(readyQueue[i]->prio)));
+        ui->processtable->setItem(int(i),2,new QTableWidgetItem(QString::number(readyQueue[i]->cpuTime)));
+        ui->processtable->setItem(int(i),3,new QTableWidgetItem(QString::number(readyQueue[i]->needTime)));
+        ui->processtable->setItem(int(i),4,new QTableWidgetItem(QString::fromStdString(readyQueue[i]->state)));
+        ui->processtable->setItem(int(i),5,new QTableWidgetItem(QString::fromStdString(readyQueue[i]->equip)));
 
-        for(int j=0;j<5;j++){
-            ui->processtable->item(i,j)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-            ui->processtable->item(i,j)->setBackground(QBrush(QColor(255,244,196)));
+        for(int j=0;j<6;j++){
+            ui->processtable->item(int(i),j)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+            ui->processtable->item(int(i),j)->setBackground(QBrush(QColor(255,244,196)));
         }
     }
 }
@@ -75,11 +76,12 @@ void ProcessTab::insertReadyQueue(PCB* process,string name){
     process = new PCB;
 
     process->name = name;
-    process->needTime = rand()%50;
-    process->prio = maxPrio - process->needTime;
-    process->round = 5;
+    process->needTime = rand()%10;
+    process->prio = 10 - process->needTime;
+    process->round = 1;
     process->cpuTime = 0;
     strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
+    process->equip = "无";
     //根据优先级排序，放入就绪队列
     readyQueue.push_back(process);
     sort(readyQueue.begin(),readyQueue.end(),compare);

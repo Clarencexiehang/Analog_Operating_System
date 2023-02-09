@@ -5,8 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);setFixedSize(1500,800);
-    //setFixedSize(1300,900);
+    ui->setupUi(this);
+    setFixedSize(1500,800);
     setWindowTitle("模拟操作系统");
     //添加每个管理页面
     processTab=new ProcessTab(this);
@@ -19,6 +19,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->fileArea->setWidget(fileTab);
     ui->equipArea->setWidget(equipmentTab);
     ui->diskArea->setWidget(diskTab);
+
+    //随机产生进程并展示
+    srand(time(nullptr));
+    this->processTab->Random_Create_PCB();
+    this->processTab->showProcess();
 }
 
 MainWindow::~MainWindow()

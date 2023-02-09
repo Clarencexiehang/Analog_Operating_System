@@ -5,9 +5,9 @@
 #include "mainwindow.h"
 #include "pcb.h"
 
-extern vector<PCB*> readyQueue;
-extern vector<PCB*> runningQueue;
-extern vector<PCB*> finishQueue;
+//extern vector<PCB*> readyQueue;
+//extern vector<PCB*> runningQueue;
+//extern vector<PCB*> finishQueue;
 
 processDialog::processDialog(QWidget *parent) :
     QDialog(parent),
