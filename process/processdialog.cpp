@@ -5,10 +5,6 @@
 #include "mainwindow.h"
 #include "pcb.h"
 
-//extern vector<PCB*> readyQueue;
-//extern vector<PCB*> runningQueue;
-//extern vector<PCB*> finishQueue;
-
 processDialog::processDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::processDialog)
@@ -42,8 +38,9 @@ void processDialog::on_pushButton_ok_clicked()
     process->name = name.toStdString();
     process->needTime = cpuTime.toInt();
     process->prio = prio.toInt();
-    process->round = 5;
+    process->round = 1;
     process->cpuTime = 0;
+    process->equip = "无";
     strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
 
     if(process->needTime<0||process->needTime>50){
@@ -60,8 +57,7 @@ void processDialog::on_pushButton_ok_clicked()
     w->processTab->readyQueue.push_back(process);
     sort(w->processTab->readyQueue.begin(),w->processTab->readyQueue.end(), ProcessTab::compare);
     //更新表格
-    connect(this,SIGNAL(sendToShowProcess()),w->processTab,SLOT(showProcess()));
-    emit this->sendToShowProcess();
+    w->processTab->showProcess();
     this->close();
 }
 
