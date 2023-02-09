@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QTimer>
+#include <QDateTime>
 Memory::Memory(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Memory)
@@ -36,14 +37,22 @@ Memory::Memory(QWidget *parent) :
         }
     }
     this->initMemery();
+    // 测试函数的代码
     this->requestMemery(5,2);
     this->requestMemery(3,1);
     QTimer * timer = new QTimer(this);
-    timer->start(500);
+    QTimer * timer2 = new QTimer(this);
+    timer->start(1000);
     Memory * that = this;
+    srand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
     connect(timer,&QTimer::timeout,[=](){
         that->freeMemery(2);
         timer->stop();
+    });
+    timer2->start(1000);
+    connect(timer2,&QTimer::timeout,[=](){
+        int ran = rand() % 10;
+        that->replacePageByLRU(1,ran);
     });
 }
 
@@ -65,16 +74,20 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
     int j = block->startIndex%20;
     int i = block->startIndex/20;
     for (int k=0;k<block->memeryBlockSize;k++){
-        QString text;
-        text = QString::number(block->pid)+"|-1";
 //        qDebug()<<text;
-        ui->memeryTable->item(i,j)->setText(text);
         ui->memeryTable->item(i,j)->setFont(QFont("song", 10));
-        if(flag==0)
-        ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
-        else {
+        if(flag==0){
+            QString text;
+            text = QString::number(block->pid)+"|-1";
+            ui->memeryTable->item(i,j)->setText(text);
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
+        }
+        else if(flag==1){
             ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(200,200,200)));
             ui->memeryTable->item(i,j)->setText("");
+        }
+        else{
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
         }
         j++;
         if(j==20){
@@ -98,8 +111,10 @@ bool Memory::requestMemery(int pageFrame,int pid){
             block->memeryBlockSize = pageFrame;
 
             for(int i=0;i<5;i++){
-
                 block->pageList[i] = -1;
+            }
+            for(int i=0;i<50;i++){
+                block->requestPageList[i] = -1;
             }
             block->endIndex = tempBlock1->startIndex + pageFrame - 1;
             block->startIndex = tempBlock1->startIndex;
@@ -215,6 +230,86 @@ void Memory::freeMemery(int pid){
             block->nextBlock = block->nextBlock->nextBlock;
             free(block->nextBlock);
         }
+    }
+}
+//页面置换算法 最久未使用算法
+void Memory::replacePageByLRU(int pid,int page){
+    //找到该进程的内存
+    struct usedMemeryBlock * block;
+    block = this->usedMemeryList;
+    while(block != nullptr && block->pid != pid){
+        block = block->nextBlock;
+    }
+    if(block == nullptr) return;
+    block->requestPageList[block->requestPageCount] = page;
+    block->requestPageCount++;
+    //初始化
+    int j = block->startIndex%20;
+    int i = block->startIndex/20;
+    for(int k=0;k<block->memeryBlockSize;k++){
+        //进入页在内存中
+        if(block->pageList[k] == page){
+            this->dye(block,2);
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(16,126,239)));
+            return;
+        }
+        j++;
+        if(j==20){
+            i++;
+            j = 0;
+        }
+    }
+    //内存空间未满
+    if(block->requestPageCount<=block->memeryBlockSize){
+        block->pageList[block->requestPageCount-1] = page;
+        int index = (block->startIndex+block->requestPageCount-1)/20;
+        int jindex = (block->startIndex+block->requestPageCount-1)%20;
+        this->dye(block,2);
+        ui->memeryTable->item(index,jindex)->setBackground(QBrush(QColor(16,126,239)));
+        QString text;
+//        text = "" + page;
+        ui->memeryTable->item(index,jindex)->setText(QString::number(page));
+    }
+    else{
+        //寻找替换的位置
+        int k;
+        int postion[block->memeryBlockSize];
+        int count = 0;
+        for(k = 0;k<block->memeryBlockSize;k++){
+            postion[k] = -1;
+        }
+        //对前面的页进行扫描
+        for(k = block->requestPageCount-1;k>=0;k--){
+            int z;
+            for(z=0;z<block->memeryBlockSize;z++){
+                if(block->requestPageList[k] == block->pageList[z]){
+                    if(postion[z]!=0)
+                    {
+                        postion[z] = 0;
+                        count++;
+                    }
+                }
+            }
+            if(count == block->memeryBlockSize-1){
+                break;
+            }
+        }
+        //取出需要置换的位置
+        int index;
+        for(index=0;index<block->memeryBlockSize;index++){
+            if(postion[index]==-1){
+                break;
+            }
+        }
+        //置换
+        int xindex = (block->startIndex+index)/20;
+        int yindex = (block->startIndex+index)%20;
+        this->dye(block,2);
+        block->pageList[index] = page;
+        ui->memeryTable->item(xindex,yindex)->setBackground(QBrush(QColor(16,126,239)));
+        QString text;
+//        text = "" + page;
+        ui->memeryTable->item(xindex,yindex)->setText(QString::number(page));
     }
 }
 

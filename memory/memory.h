@@ -17,6 +17,8 @@ struct usedMemeryBlock{
     int endIndex;
     int memeryBlockSize;
     int pid;
+    int requestPageList[50];
+    int requestPageCount = 0;
     int pageList[5];
     usedMemeryBlock *nextBlock;
 };
@@ -34,6 +36,7 @@ public:
     void mergeFreeMemery();
     void dye(struct usedMemeryBlock * block,int flag);
     bool requestMemery(int pageFrame,int pid);
+    void replacePageByLRU(int pid,int page);
     void freeMemery(int pid);
     ~Memory();
 
