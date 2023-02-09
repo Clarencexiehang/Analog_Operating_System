@@ -30,7 +30,7 @@
       <x>20</x>
       <y>10</y>
       <width>720</width>
-      <height>500</height>
+      <height>631</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -48,24 +48,24 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>498</height>
+       <height>629</height>
       </rect>
      </property>
     </widget>
    </widget>
-   <widget class="QScrollArea" name="diskArea">
+   <widget class="QScrollArea" name="equipArea">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>530</y>
+      <y>651</y>
       <width>720</width>
-      <height>321</height>
+      <height>200</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
       <width>720</width>
-      <height>310</height>
+      <height>200</height>
      </size>
     </property>
     <property name="widgetResizable">
@@ -77,7 +77,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>319</height>
+       <height>198</height>
       </rect>
      </property>
     </widget>
@@ -111,19 +111,19 @@
      </property>
     </widget>
    </widget>
-   <widget class="QScrollArea" name="fileArea">
+   <widget class="QScrollArea" name="diskArea">
     <property name="geometry">
      <rect>
       <x>760</x>
       <y>320</y>
       <width>720</width>
-      <height>300</height>
+      <height>250</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
       <width>720</width>
-      <height>300</height>
+      <height>250</height>
      </size>
     </property>
     <property name="widgetResizable">
@@ -135,18 +135,18 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>298</height>
+       <height>248</height>
       </rect>
      </property>
     </widget>
    </widget>
-   <widget class="QScrollArea" name="equipArea">
+   <widget class="QScrollArea" name="fileArea">
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>640</y>
+      <y>580</y>
       <width>720</width>
-      <height>211</height>
+      <height>271</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -164,7 +164,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>209</height>
+       <height>269</height>
       </rect>
      </property>
     </widget>
