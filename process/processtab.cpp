@@ -1,14 +1,7 @@
 #include "processtab.h"
 #include "ui_processtab.h"
-#include "vector"
-#include "time.h"
-#include "algorithm"
-#include "QDebug"
-#include "QFont"
-#include "QBrush"
-#include "processdialog.h"
-#include "QMessageBox"
-#include "QStringListModel"
+
+
 
 ProcessTab::ProcessTab(QWidget *parent) :
     QWidget(parent),
@@ -30,6 +23,19 @@ ProcessTab::ProcessTab(QWidget *parent) :
     ui->processtable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->processtable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    //队列外观
+    ui->listWidget_ready->setViewMode(QListView::ListMode);
+    ui->listWidget_ready->setAlternatingRowColors(true);
+
+    //访问页面外观
+    ui->listWidget->setViewMode(QListView::IconMode);
+
+
+    //定时器
+    timer = new QTimer(this);
+    connect(timer,&QTimer::timeout,[=](){
+        this->FCFS();
+    });
 
 }
 
@@ -38,31 +44,74 @@ ProcessTab::~ProcessTab()
     delete ui;
 }
 
+void ProcessTab::showQueue(){
+    ui->listWidget_ready->clear();
+    ui->listWidget_running->clear();
+    ui->listWidget_block->clear();
+    //就绪队列
+    QStringList readyProcess;
+    for (unsigned int i=0;i<readyQueue.size();i++) {
+        readyProcess<<QString::fromStdString(readyQueue[i]->name);
+    }
+    ui->listWidget_ready->addItems(readyProcess);
+
+    //运行队列
+    QStringList runProcess;
+    for (unsigned int i=0;i<runningQueue.size();i++) {
+        runProcess<<QString::fromStdString(runningQueue[i]->name);
+    }
+    ui->listWidget_running->addItems(runProcess);
+
+    //阻塞队列
+    QStringList blockProcess;
+    for (int i=0;i<blockProcess.size();i++) {
+        blockProcess<<QString::fromStdString(blockQueue[i]->name);
+    }
+    ui->listWidget_block->addItems(blockProcess);
+
+    QCoreApplication::processEvents();
+}
+
+void ProcessTab::showVisitPages(PCB *process){
+    ui->listWidget->clear();
+    QStringList visitpage;
+    for (int i=0;i<10;i++) {
+        visitpage<<QString::number(process->visit_pages[i]);
+    }
+
+    ui->listWidget->addItems(visitpage);
+    QCoreApplication::processEvents();
+}
+
 
 //展示进程
 void ProcessTab::showProcess(){
     ui->processtable->setRowCount(0);
-    for(unsigned int i=0;i<readyQueue.size();i++){
+    for(unsigned int i=0;i<processQueue.size();i++){
         int nCount = ui->processtable->rowCount();
         ui->processtable->insertRow(nCount);
-        ui->processtable->setItem(int(i),0,new QTableWidgetItem(QString::fromStdString( readyQueue[i]->name)));
-        ui->processtable->setItem(int(i),1,new QTableWidgetItem(QString::number(readyQueue[i]->prio)));
-        ui->processtable->setItem(int(i),2,new QTableWidgetItem(QString::number(readyQueue[i]->cpuTime)));
-        ui->processtable->setItem(int(i),3,new QTableWidgetItem(QString::number(readyQueue[i]->needTime)));
-        ui->processtable->setItem(int(i),4,new QTableWidgetItem(QString::fromStdString(readyQueue[i]->equip)));
-        ui->processtable->setItem(int(i),5,new QTableWidgetItem(QString::fromStdString(readyQueue[i]->state)));
+        ui->processtable->setItem(int(i),0,new QTableWidgetItem(QString::fromStdString( processQueue[i]->name)));
+        ui->processtable->setItem(int(i),1,new QTableWidgetItem(QString::number(processQueue[i]->prio)));
+        ui->processtable->setItem(int(i),2,new QTableWidgetItem(QString::number(processQueue[i]->cpuTime)));
+        ui->processtable->setItem(int(i),3,new QTableWidgetItem(QString::number(processQueue[i]->needTime)));
+        ui->processtable->setItem(int(i),4,new QTableWidgetItem(QString::fromStdString(processQueue[i]->equip)));
+        ui->processtable->setItem(int(i),5,new QTableWidgetItem(QString::fromStdString(processQueue[i]->state)));
 
         for(int j=0;j<6;j++){
             ui->processtable->item(int(i),j)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
             ui->processtable->item(int(i),j)->setBackground(QBrush(QColor(255,244,196)));
+            if(strcmp(processQueue[i]->state,"运行")==0){
+                ui->processtable->item(int(i),j)->setBackground(QBrush(QColor(255,210,100)));
+            }
         }
     }
+    QCoreApplication::processEvents();
 }
 
 void ProcessTab::Random_Create_PCB(){
     for(int i=0;i<3;i++){
         PCB* p = nullptr;
-        string name = "process"+to_string(i);
+        string name = "pro"+to_string(i);
         insertReadyQueue(p,name);
     }
 }
@@ -76,7 +125,7 @@ void ProcessTab::insertReadyQueue(PCB* process,string name){
     process = new PCB;
 
     process->name = name;
-    process->needTime = rand()%10;
+    process->needTime = rand()%9+1;
     process->prio = 10 - process->needTime;
     process->round = 1;
     process->cpuTime = 0;
@@ -87,9 +136,9 @@ void ProcessTab::insertReadyQueue(PCB* process,string name){
     for(int i=0;i<10;i++){
         process->visit_pages[i] = rand()%10;
     }
-    //根据优先级排序，放入就绪队列
+    //放入就绪队列
+    processQueue.push_back(process);
     readyQueue.push_back(process);
-    sort(readyQueue.begin(),readyQueue.end(),compare);
 }
 
 
@@ -114,16 +163,13 @@ void ProcessTab::on_deleteprocess_clicked()
 //开始按钮
 void ProcessTab::on_start_clicked()
 {
-    //清空表格
-    ui->processtable->setRowCount(0);
-
     //判断使用哪种调度方法
     if (ui->FCFS->isChecked()) {
         this->FCFS();
     }else if(ui->SJF->isChecked()){
 
     }else if(ui->DPTSR->isChecked()){
-
+//        this->Dynamic_Priority_Time_Slice_Rotation();
     }else{
         QMessageBox::warning(this,"错误提示",tr("请选择调度算法"));
         return ;
@@ -146,17 +192,50 @@ void ProcessTab::on_pause_clicked(bool checked)
 
 //先来先服务法
 void ProcessTab::FCFS(){
-    QStringList visitpage;
-    for (int i=0;i<10;i++) {
-        visitpage<<QString::number(readyQueue[0]->visit_pages[i]);
+
+    while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
+        PCB *runOne = readyQueue[0];
+        readyQueue.erase(readyQueue.begin());
+        runningQueue.push_back(runOne);
+        this->showQueue();
+        this->showVisitPages(runOne);
+
+        int usetime=1;
+        while(runOne->needTime>0){
+            runOne->needTime--;
+            //延时
+            t.start();
+            while(t.elapsed()<1000);
+
+            //更新表格状态
+            for(unsigned int i=0;i<processQueue.size();i++){
+                if(processQueue[i]->name==runOne->name){
+                    strcpy( processQueue[i]->state, "运行");
+                    processQueue[i]->needTime = runOne->needTime;
+                    processQueue[i]->cpuTime = usetime++;
+                }
+            }
+            this->showProcess();
+        }
+
+        runningQueue.pop_back();
+        this->showQueue();
+        //更新表格状态
+        for(unsigned int i=0;i<processQueue.size();i++){
+            if(processQueue[i]->name==runOne->name){
+                strcpy( processQueue[i]->state, "完成");
+                processQueue[i]->needTime = 0;
+            }
+        }
+        this->showProcess();
     }
-    ui->listWidget->setViewMode(QListView::IconMode);
-    ui->listWidget->addItems(visitpage);
+    qDebug()<<"yes";
 }
 
 //动态优先级时间片轮转法
 void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
-    runningQueue.erase(runningQueue.begin());
+    sort(readyQueue.begin(),readyQueue.end(),compare);  //就绪队列排序
+    runningQueue.erase(runningQueue.begin());   //清空运行队列
 
     int tempPrio;
 
@@ -179,8 +258,10 @@ void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
     }
     if(tempPrio == 0){
         strcpy(process->state, "finished");
-        finishQueue.push_back(process);
+        //finishQueue.push_back(process);
+
         qDebug()<<"进程 "<<QString::fromStdString(process->name)<<" 执行完毕！";
+
     }else{
         process->prio = tempPrio-2;
         strcpy(process->state, "ready");
@@ -188,6 +269,4 @@ void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
         sort(readyQueue.begin(),readyQueue.end(), compare);
     }
 }
-
-
 

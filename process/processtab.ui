@@ -292,7 +292,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget_2">
+  <widget class="QListWidget" name="listWidget_running">
    <property name="geometry">
     <rect>
      <x>630</x>
@@ -308,7 +308,7 @@
     </size>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget_3">
+  <widget class="QListWidget" name="listWidget_block">
    <property name="geometry">
     <rect>
      <x>630</x>

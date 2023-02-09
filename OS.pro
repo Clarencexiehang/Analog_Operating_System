@@ -34,8 +34,7 @@ SOURCES += \
     process/processdialog.cpp \
     process/processtab.cpp \
     main.cpp \
-    mainwindow.cpp \
-    process/myprocessicon.cpp
+    mainwindow.cpp
 
 
 HEADERS += \
@@ -46,8 +45,7 @@ HEADERS += \
     process/pcb.h \
     process/processdialog.h \
     process/processtab.h \
-    mainwindow.h \
-    process/myprocessicon.h
+    mainwindow.h
 
 
 
@@ -58,8 +56,7 @@ FORMS += \
     memory/memory.ui \
     process/processdialog.ui \
     process/processtab.ui \
-    mainwindow.ui \
-    process/myprocessicon.ui
+    mainwindow.ui
 
 
 

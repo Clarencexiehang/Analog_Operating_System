@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="pics.qrc">
+   <iconset>
     <normaloff>:/pics/tubiao.jpg</normaloff>:/pics/tubiao.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -57,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>650</y>
+      <y>640</y>
       <width>720</width>
       <height>200</height>
      </rect>
@@ -191,8 +191,6 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="pics.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
