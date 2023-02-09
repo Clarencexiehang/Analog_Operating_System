@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>290</height>
+    <height>253</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>710</width>
-    <height>290</height>
+    <width>700</width>
+    <height>200</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,16 @@
    </property>
    <property name="text">
     <string>内存状态</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="memeryTable">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>691</width>
+     <height>211</height>
+    </rect>
    </property>
   </widget>
  </widget>

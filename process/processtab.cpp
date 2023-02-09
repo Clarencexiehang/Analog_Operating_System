@@ -23,6 +23,7 @@ ProcessTab::ProcessTab(QWidget *parent) :
     ui->processtable->horizontalHeader()->setMinimumHeight(50);
     ui->processtable->setHorizontalHeaderLabels(tableheader);
     ui->processtable->verticalHeader()->setVisible(false);
+//    ui->processtable->horizontalHeader()->setDefaultAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->processtable->setAlternatingRowColors(true);
     ui->processtable->setSelectionBehavior(QAbstractItemView::SelectRows);      //设置选择每行且单元不可编辑
     ui->processtable->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -149,7 +150,7 @@ void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
     if(tempPrio == 0){
         strcpy(process->state, "finished");
         finishQueue.push_back(process);
-        qDebug()<<"进程 "<<QString::fromStdString(process->name)<<" 执行完毕！"<<endl;
+        qDebug()<<"进程 "<<QString::fromStdString(process->name)<<" 执行完毕！"<<Qt::endl;
     }else{
         process->prio = tempPrio-2;
         strcpy(process->state, "ready");
