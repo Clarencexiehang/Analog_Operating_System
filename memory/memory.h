@@ -16,10 +16,11 @@ struct usedMemeryBlock{
     int startIndex;
     int endIndex;
     int memeryBlockSize;
-    int pid;
+    QString pid;
     int requestPageList[50];
     int requestPageCount = 0;
     int pageList[5];
+
     usedMemeryBlock *nextBlock;
 };
 class Memory : public QWidget
@@ -35,9 +36,9 @@ public:
     void BubbleSort(freeMemeryBlock * &L);
     void mergeFreeMemery();
     void dye(struct usedMemeryBlock * block,int flag);
-    bool requestMemery(int pageFrame,int pid);
-    void replacePageByLRU(int pid,int page);
-    void freeMemery(int pid);
+    bool requestMemery(int pageFrame,QString pid);
+    void replacePageByLRU(QString pid,int page);
+    void freeMemery(QString pid);
     ~Memory();
 
 private:
