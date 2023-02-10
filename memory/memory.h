@@ -19,6 +19,7 @@ struct usedMemeryBlock{
     QString pid;
     int requestPageList[50];
     int requestPageCount = 0;
+
     int pageList[5];
 
     usedMemeryBlock *nextBlock;

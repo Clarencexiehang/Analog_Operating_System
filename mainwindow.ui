@@ -20,7 +20,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="pics.qrc">
+   <iconset>
     <normaloff>:/pics/tubiao.jpg</normaloff>:/pics/tubiao.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
@@ -28,15 +28,15 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>-50</y>
+      <y>10</y>
       <width>720</width>
-      <height>631</height>
+      <height>620</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
       <width>720</width>
-      <height>500</height>
+      <height>620</height>
      </size>
     </property>
     <property name="widgetResizable">
@@ -48,7 +48,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>629</height>
+       <height>618</height>
       </rect>
      </property>
     </widget>
@@ -57,7 +57,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>480</y>
+      <y>640</y>
       <width>720</width>
       <height>200</height>
      </rect>
@@ -115,7 +115,7 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>270</y>
+      <y>280</y>
       <width>720</width>
       <height>250</height>
      </rect>
@@ -144,9 +144,9 @@
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>580</y>
+      <y>550</y>
       <width>720</width>
-      <height>271</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="minimumSize">
@@ -164,7 +164,7 @@
        <x>0</x>
        <y>0</y>
        <width>718</width>
-       <height>269</height>
+       <height>289</height>
       </rect>
      </property>
     </widget>
@@ -176,7 +176,7 @@
      <x>0</x>
      <y>0</y>
      <width>1500</width>
-     <height>30</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
@@ -191,8 +191,6 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <resources>
-  <include location="pics.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

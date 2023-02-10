@@ -12,3 +12,4 @@ File::~File()
 {
     delete ui;
 }
+

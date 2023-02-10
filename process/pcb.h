@@ -16,7 +16,8 @@ public:
     int needTime;           /*进程到完成还需要的时间*/
     char state[10];         /*进程的状态*/
     string equip;           /*使用设备*/
-    int visit_pages[10];    /*进程访问的页面顺序*/
+    int visit_pages[20];    /*进程访问的页面顺序*/
+    int visit_page_index;   /*进程将要访问的页面下标*/
 
 public:
     PCB();

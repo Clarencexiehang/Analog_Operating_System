@@ -5,10 +5,6 @@
 #include "mainwindow.h"
 #include "pcb.h"
 
-//extern vector<PCB*> readyQueue;
-//extern vector<PCB*> runningQueue;
-//extern vector<PCB*> finishQueue;
-
 processDialog::processDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::processDialog)
@@ -42,26 +38,41 @@ void processDialog::on_pushButton_ok_clicked()
     process->name = name.toStdString();
     process->needTime = cpuTime.toInt();
     process->prio = prio.toInt();
-    process->round = 5;
+    process->round = 1;
     process->cpuTime = 0;
+    process->equip = "无";
+    process->visit_page_index = 0;
+    for(int i=0;i<process->needTime;i++){
+        process->visit_pages[i] = rand()%20;
+    }
+
+
     strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
 
-    if(process->needTime<0||process->needTime>50){
-        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,50]内"));
+    if(process->needTime<=0||process->needTime>20){
+        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,20]内"));
         return ;
     }
-    if(process->prio<0||process->prio>50){
-        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,50]内"));
+    if(process->prio<=0||process->prio>20){
+        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,20]内"));
         return ;
     }
 
     //根据优先级排序，放入就绪队列
     extern MainWindow *w;
+    w->processTab->processQueue.push_back(process);
     w->processTab->readyQueue.push_back(process);
-    sort(w->processTab->readyQueue.begin(),w->processTab->readyQueue.end(), ProcessTab::compare);
+
+    if(process->needTime>10){
+        w->memoryTab->requestMemery(5,QString::fromStdString(process->name));
+    }else{
+        int pageFrame = rand()%4+1;
+        qDebug()<<"what1";
+        w->memoryTab->requestMemery(pageFrame,name);qDebug()<<"what2";
+    }
+
     //更新表格
-    connect(this,SIGNAL(sendToShowProcess()),w->processTab,SLOT(showProcess()));
-    emit this->sendToShowProcess();
+    w->processTab->showProcess();
     this->close();
 }
 

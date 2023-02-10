@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDebug>
 #include <QTimer>
+
 #include <QDateTime>
 Memory::Memory(QWidget *parent) :
     QWidget(parent),
@@ -37,7 +38,9 @@ Memory::Memory(QWidget *parent) :
         }
     }
     this->initMemery();
+
     // 测试函数的代码
+
 //    this->requestMemery(5,"22");
 //    this->requestMemery(3,"21");
 //    this->requestMemery(3,"23");
@@ -96,6 +99,7 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
         else{
             ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
         }
+
         j++;
         if(j==20){
             i++;
@@ -120,18 +124,19 @@ bool Memory::requestMemery(int pageFrame,QString pid){
             block->memeryBlockSize = pageFrame;
 
             for(int i=0;i<5;i++){
+
                 block->pageList[i] = -1;
             }
             for(int i=0;i<50;i++){
                 block->requestPageList[i] = -1;
             }
+
             block->endIndex = tempBlock1->startIndex + pageFrame - 1;
             block->startIndex = tempBlock1->startIndex;
             block->pid = pid;
             if(this->usedMemeryList!=nullptr)
                 block->nextBlock = this->usedMemeryList;
             this->usedMemeryList = block;
-//
             this->dye(block,0);//对已分配的内存进行染色
             qDebug()<<tempBlock1->memeryBlockSize<<tempBlock1->startIndex;
             if(tempBlock1->memeryBlockSize!=pageFrame){
@@ -270,6 +275,7 @@ void Memory::freeMemery(QString pid){
     }
     this->mergeFreeMemery();
 }
+
 //页面置换算法 最久未使用算法
 void Memory::replacePageByLRU(QString pid,int page){
     //找到该进程的内存
@@ -350,6 +356,7 @@ void Memory::replacePageByLRU(QString pid,int page){
         ui->memeryTable->item(xindex,yindex)->setText(QString::number(page));
     }
 }
+
 
 void Memory::paintEvent(QPaintEvent *){
     QPainter painter(this); //指定绘图设备
