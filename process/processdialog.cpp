@@ -43,18 +43,18 @@ void processDialog::on_pushButton_ok_clicked()
     process->equip = "无";
     process->visit_page_index = 0;
     for(int i=0;i<process->needTime;i++){
-        process->visit_pages[i] = rand()%10;
+        process->visit_pages[i] = rand()%20;
     }
 
 
     strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
 
-    if(process->needTime<=0||process->needTime>10){
-        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,10]内"));
+    if(process->needTime<=0||process->needTime>20){
+        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,20]内"));
         return ;
     }
-    if(process->prio<0||process->prio>10){
-        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,10]内"));
+    if(process->prio<=0||process->prio>20){
+        QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,20]内"));
         return ;
     }
 
@@ -62,7 +62,15 @@ void processDialog::on_pushButton_ok_clicked()
     extern MainWindow *w;
     w->processTab->processQueue.push_back(process);
     w->processTab->readyQueue.push_back(process);
-    //sort(w->processTab->processQueue.begin(),w->processTab->processQueue.end(), ProcessTab::compare);
+
+    if(process->needTime>10){
+        w->memoryTab->requestMemery(5,QString::fromStdString(process->name));
+    }else{
+        int pageFrame = rand()%4+1;
+        qDebug()<<"what1";
+        w->memoryTab->requestMemery(pageFrame,name);qDebug()<<"what2";
+    }
+
     //更新表格
     w->processTab->showProcess();
     this->close();

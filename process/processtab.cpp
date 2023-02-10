@@ -1,8 +1,8 @@
 #include "processtab.h"
 #include "ui_processtab.h"
-
 #include "mainwindow.h"
 
+extern MainWindow *w;
 
 ProcessTab::ProcessTab(QWidget *parent) :
     QWidget(parent),
@@ -34,7 +34,8 @@ ProcessTab::ProcessTab(QWidget *parent) :
 
     //定时器
 //    timer = new QTimer(this);
-//   connect(timer,SIGNAL(timeout()),this,SLOT(FCFS()));
+//   connect(timer,SIGNAL(timeout()),this,SLOT(on_createprocess_clicked()));
+//   timer->start(1000);
 
 }
 
@@ -84,6 +85,30 @@ void ProcessTab::showVisitPages(PCB *process){
 }
 
 
+//更新表格状态
+void ProcessTab::updateTableWidget(PCB *runOne,string state){
+    for(unsigned int i=0;i<processQueue.size();i++){
+        if(processQueue[i]->name==runOne->name){
+            if(state == "完成"){
+                strcpy( processQueue[i]->state, "完成");
+                processQueue[i]->needTime = 0;
+                w->memoryTab->freeMemery(QString::fromStdString(processQueue[i]->name));
+            }else if (state == "运行"){
+                strcpy( processQueue[i]->state, "运行");
+                processQueue[i]->needTime = runOne->needTime;
+
+            }else if (state == "round"){
+                 strcpy(processQueue[i]->state, "就绪");
+                 processQueue[i]->prio = runOne->prio;
+                 processQueue[i]->needTime = runOne->needTime;
+                 processQueue[i]->cpuTime = runOne->cpuTime;
+            }
+        }
+    }
+    this->showProcess();
+    QCoreApplication::processEvents();
+}
+
 //展示进程
 void ProcessTab::showProcess(){
     ui->processtable->setRowCount(0);
@@ -116,35 +141,33 @@ void ProcessTab::Random_Create_PCB(){
     }
 }
 
-//按照优先级从大到小排序
-bool ProcessTab::compare(PCB* a,PCB* b){
-    return a->prio > b->prio;
-}
-
 void ProcessTab::insertReadyQueue(PCB* process,string name){
     process = new PCB;
 
     process->name = name;
-    process->needTime = rand()%9+1;
-    process->prio = 10 - process->needTime;
-    process->round = 1;
+    process->needTime = rand()%19+1;
+    process->prio = 20 - process->needTime;
+    process->round = 2;
     process->cpuTime = 0;
     strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
     process->equip = "无";
     process->visit_page_index = 0;
 
     for(int i=0;i<process->needTime;i++){
-        process->visit_pages[i] = rand()%10;
+        process->visit_pages[i] = rand()%20;
     }
     //放入就绪队列
     processQueue.push_back(process);
     readyQueue.push_back(process);
 
-    extern MainWindow *w;
-//    string a="1";
-//    qDebug()<<std::stoi(a.c_str());
-//    w->memoryTab->requestMemery(5,stoi(process->name.c_str()));
-
+    //分配内存
+    QString p = QString::fromStdString(process->name);
+    if(process->needTime>10){
+        w->memoryTab->requestMemery(5,QString::fromStdString(process->name));
+    }else{
+        int pageFrame = rand()%4+1;
+        w->memoryTab->requestMemery(pageFrame,QString::fromStdString(process->name));
+    }
 }
 
 
@@ -163,7 +186,25 @@ void ProcessTab::on_createprocess_clicked()
 void ProcessTab::on_deleteprocess_clicked()
 {
     int currentRow = ui->processtable->currentRow();
+    for(int i=0;i<processQueue.size();i++){
+        if(QString::fromStdString(processQueue[i]->name) == ui->processtable->item(currentRow,0)->text()){
+            processQueue.erase(processQueue.begin()+i);
+        }
+    }
+    if(!readyQueue.empty()){
+        for(unsigned int i=0;i<readyQueue.size();i++){
+            if(QString::fromStdString(readyQueue[i]->name) == ui->processtable->item(currentRow,0)->text()){
+                readyQueue.erase(readyQueue.begin()+i);
+            }
+        }
+    }else{
+        ui->processtable->removeRow(currentRow);
+        return ;
+    }
+    qDebug()<<"pid:"<<ui->processtable->item(currentRow,0)->text();
+    w->memoryTab->freeMemery(ui->processtable->item(currentRow,0)->text());qDebug()<<"flag2";
     ui->processtable->removeRow(currentRow);
+
 }
 
 //开始按钮
@@ -174,9 +215,9 @@ void ProcessTab::on_start_clicked()
         // timer->start(1000); //启动定时器，运行完一个进程
         FCFS();
     }else if(ui->SJF->isChecked()){
-
+        this->SJF();
     }else if(ui->DPTSR->isChecked()){
-//        this->Dynamic_Priority_Time_Slice_Rotation();
+        this->Dynamic_Priority_Time_Slice_Rotation();
     }else{
         QMessageBox::warning(this,"错误提示",tr("请选择调度算法"));
         return ;
@@ -214,20 +255,13 @@ void ProcessTab::FCFS(){
         this->showQueue();
         this->showVisitPages(runOne);
 
-        int usetime=1;
         while(runOne->needTime>0){
             runOne->needTime--;
 
             //更新进程信息，更新表格状态
-            for(unsigned int i=0;i<processQueue.size();i++){
-                if(processQueue[i]->name==runOne->name){
-                    strcpy( processQueue[i]->state, "运行");
-                    processQueue[i]->needTime = runOne->needTime;
-                    processQueue[i]->cpuTime = usetime++;
-                   // processQueue[i]->visit_page_index++;
-                }
-            }
-            this->showProcess();
+            this->updateTableWidget(runOne,"运行");
+            w->memoryTab->replacePageByLRU(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
+
 
             //更新输出日志
             ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
@@ -240,73 +274,138 @@ void ProcessTab::FCFS(){
             while(t.elapsed()<1000);
         }
 
+        //进程执行完后更新
+        this->updateTableWidget(runOne,"完成");
         runningQueue.pop_back();
         this->showQueue();
-        //更新表格状态
-        for(unsigned int i=0;i<processQueue.size();i++){
-            if(processQueue[i]->name==runOne->name){
-                strcpy( processQueue[i]->state, "完成");
-                processQueue[i]->needTime = 0;
-            }
-        }
-        this->showProcess();
 
         ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
         ui->textBrowser->moveCursor(QTextCursor::End);
         ui->textBrowser->append(QString(""));
-
-        qDebug()<<"yes";
     }
 }
 
 
 /**********************************短作业优先法*******************************/
+//按照优先级从大到小排序
+bool ProcessTab::cmp_needtime(PCB *a, PCB *b){
+    return a->needTime < b->needTime;
+}
+
 void ProcessTab::SJF(){
     while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
+        sort(readyQueue.begin(),readyQueue.end(),ProcessTab::cmp_needtime);  //就绪队列排序
         PCB *runOne = readyQueue[0];
         readyQueue.erase(readyQueue.begin());
         runningQueue.push_back(runOne);
         this->showQueue();
         this->showVisitPages(runOne);
+
+        while(runOne->needTime>0){
+            runOne->needTime--;
+
+            //更新进程信息，更新表格状态
+            this->updateTableWidget(runOne,"运行");
+            w->memoryTab->replacePageByLRU(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
+
+
+            //更新输出日志
+            ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
+                                              +",  已运行时间:"+ QString::number(runOne->cpuTime));
+            ui->textBrowser->moveCursor(QTextCursor::End);
+            ui->textBrowser->append(QString(""));
+
+            //延时1s
+            t.start();
+            while(t.elapsed()<1000);
+        }
+        //进程执行完后更新
+        this->updateTableWidget(runOne,"完成");
+        runningQueue.pop_back();
+        this->showQueue();
+
+        ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
+        ui->textBrowser->moveCursor(QTextCursor::End);
+        ui->textBrowser->append(QString(""));
     }
 }
 
 
 /**********************************动态优先级时间片轮转法*******************************/
-void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
-    sort(readyQueue.begin(),readyQueue.end(),compare);  //就绪队列排序
-    runningQueue.erase(runningQueue.begin());   //清空运行队列
+//按照优先级从大到小排序
+bool ProcessTab::compare(PCB* a,PCB* b){
+    return a->prio > b->prio;
+}
 
-    int tempPrio;
 
-    strcpy(process->state, "运行");
-        //如果进程的所需执行时间<时间片，则优先级返回0
-        if(process->needTime<process->round){
-            process->cpuTime += process->needTime;
-            process->needTime=0;
-            tempPrio=0;
-        } else{
-            process->needTime -= process->round;
-            process->cpuTime += process->round;
-            tempPrio = process->prio;
-            process->prio = maxPrio;     //运行时的进程优先级最大
+void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(){
+    while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
+        sort(readyQueue.begin(),readyQueue.end(),ProcessTab::compare);  //就绪队列排序
+        PCB *runOne = readyQueue[0];
+        readyQueue.erase(readyQueue.begin());
+        runningQueue.push_back(runOne);
+        this->showQueue();
+        this->showVisitPages(runOne);
+
+        strcpy(runOne->state, "运行");
+
+        //如果进程的所需执行时间<时间片，则进程执行完毕
+        if(runOne->needTime<=runOne->round){
+            runOne->cpuTime += runOne->needTime;
+            runOne->needTime=0;
+            qDebug()<<"进程 "<<QString::fromStdString(runOne->name)<<" 执行完毕！";
+            this->updateTableWidget(runOne,"完成");
+
+            runningQueue.pop_back();
+            this->showQueue();
+
+            ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
+            ui->textBrowser->moveCursor(QTextCursor::End);
+            ui->textBrowser->append(QString(""));
+
         }
+        //如果进程没有执行完
+        else{
+            runOne->needTime -= runOne->round;
+            runOne->cpuTime += runOne->round;
 
-    //将时间片轮转的进程重新放入就绪队列中
-    for(unsigned int i=0;i< readyQueue.size();i++){
-        readyQueue[i]->prio+=2;     //就绪队列中所有进程优先级提高2
-    }
-    if(tempPrio == 0){
-        strcpy(process->state, "finished");
-        //finishQueue.push_back(process);
+            this->updateTableWidget(runOne,"运行");
+            w->memoryTab->replacePageByLRU(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
+            this->showQueue();
 
-        qDebug()<<"进程 "<<QString::fromStdString(process->name)<<" 执行完毕！";
+            //更新输出日志
+            ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
+                                              +", 优先级:"+QString::number(runOne->prio)+",  已运行时间:"+ QString::number(runOne->cpuTime));
+            ui->textBrowser->moveCursor(QTextCursor::End);
+            ui->textBrowser->append(QString(""));
+            QCoreApplication::processEvents();
+            //延时1s
+            t.start();
+            while(t.elapsed()<1000);
 
-    }else{
-        process->prio = tempPrio-2;
-        strcpy(process->state, "ready");
-        readyQueue.push_back(process);
-        sort(readyQueue.begin(),readyQueue.end(), compare);
+            for(unsigned int i=0;i< readyQueue.size();i++){
+                readyQueue[i]->prio+=1;     //就绪队列中所有进程优先级提高1
+            }
+            if(runOne->prio!=1){
+                runOne->prio = runOne->prio-1;
+            }
+
+             //将时间片轮转的进程重新放入就绪队列中
+            strcpy(runOne->state, "就绪");
+            runningQueue.clear();
+            readyQueue.push_back(runOne);
+            this->showQueue();
+            this->updateTableWidget(runOne,"round");
+
+            //更新输出日志
+            ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+"优先级降低为:"+QString::number(runOne->prio));
+            ui->textBrowser->moveCursor(QTextCursor::End);
+            ui->textBrowser->append(QString(""));
+            QCoreApplication::processEvents();
+            //延时1s,轮转效果
+            t1.start();
+            while(t1.elapsed()<1000);
+        }
     }
 }
 

@@ -40,25 +40,23 @@ Memory::Memory(QWidget *parent) :
     this->initMemery();
 
     // 测试函数的代码
-//    this->requestMemery(5,2);
-//    this->requestMemery(3,1);
+
+//    this->requestMemery(5,"22");
+//    this->requestMemery(3,"21");
 //    QTimer * timer = new QTimer(this);
 //    QTimer * timer2 = new QTimer(this);
 //    timer->start(1000);
 //    Memory * that = this;
 //    srand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
-
 //    connect(timer,&QTimer::timeout,[=](){
-//        that->freeMemery(2);
+//        that->freeMemery("22");
 //        timer->stop();
 //    });
-
 //    timer2->start(1000);
 //    connect(timer2,&QTimer::timeout,[=](){
 //        int ran = rand() % 10;
-//        that->replacePageByLRU(1,ran);
+//        that->replacePageByLRU("21",ran);
 //    });
-
 }
 
 Memory::~Memory()
@@ -83,7 +81,7 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
         ui->memeryTable->item(i,j)->setFont(QFont("song", 10));
         if(flag==0){
             QString text;
-            text = QString::number(block->pid)+"|-1";
+            text = block->pid+"|-1";
             ui->memeryTable->item(i,j)->setText(text);
             ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
         }
@@ -103,8 +101,7 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
     }
 }
 //请求内存块 最佳适配算法
-bool Memory::requestMemery(int pageFrame,int pid){
-    qDebug()<<"pid :"<<pid;
+bool Memory::requestMemery(int pageFrame,QString pid){
     struct freeMemeryBlock * tempBlock1;
     if(this->freeMemeryList == nullptr) return false;
     tempBlock1 = this->freeMemeryList;
@@ -131,7 +128,9 @@ bool Memory::requestMemery(int pageFrame,int pid){
             if(this->usedMemeryList!=nullptr)
                 block->nextBlock = this->usedMemeryList;
             this->usedMemeryList = block;
+
             //qDebug()<<"1111";
+
             this->dye(block,0);//对已分配的内存进行染色
 
             if(tempBlock1->memeryBlockSize!=pageFrame){
@@ -198,9 +197,8 @@ void Memory::mergeFreeMemery(){
     }
 }
 //释放内存
-void Memory::freeMemery(int pid){
+void Memory::freeMemery(QString pid){
     struct usedMemeryBlock * block;
-    struct usedMemeryBlock * block1;
     block = this->usedMemeryList;
 //    block1 = this->usedMemeryList;
 //    while(block1!=nullptr){
@@ -243,7 +241,7 @@ void Memory::freeMemery(int pid){
 }
 
 //页面置换算法 最久未使用算法
-void Memory::replacePageByLRU(int pid,int page){
+void Memory::replacePageByLRU(QString pid,int page){
     //找到该进程的内存
     struct usedMemeryBlock * block;
     block = this->usedMemeryList;

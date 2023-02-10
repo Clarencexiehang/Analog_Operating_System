@@ -17,6 +17,7 @@
 #include <QElapsedTimer>
 
 
+
 namespace Ui {
 class ProcessTab;
 }
@@ -36,16 +37,16 @@ public:
 
     const int maxPrio=50;
     static bool compare(PCB* a,PCB* b);
+    static bool cmp_needtime(PCB* a,PCB* b);
     void Random_Create_PCB();
     void insertReadyQueue(PCB* process,string name);
     void FCFS();
     void SJF();
-    void Dynamic_Priority_Time_Slice_Rotation(PCB* process);        //动态优先级时间片轮转法
+    void Dynamic_Priority_Time_Slice_Rotation();        //动态优先级时间片轮转法
     void showQueue();
     void showVisitPages(PCB *process);
 
-
-    QString test = "P!!!";
+    void updateTableWidget(PCB *runOne,string state);
 
 
 private slots:
@@ -64,6 +65,7 @@ private:
     Ui::ProcessTab *ui;
     QTimer * timer;
     QElapsedTimer t;
+    QElapsedTimer t1;
 };
 
 #endif // PROCESSTAB_H

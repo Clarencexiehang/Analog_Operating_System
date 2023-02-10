@@ -20,10 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->equipArea->setWidget(equipmentTab);
     ui->diskArea->setWidget(diskTab);
 
-    //随机产生进程并展示
-    srand(time(nullptr));
-    this->processTab->Random_Create_PCB();
-    this->processTab->showProcess();
+
 }
 
 MainWindow::~MainWindow()
