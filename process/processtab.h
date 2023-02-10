@@ -39,6 +39,7 @@ public:
     void Random_Create_PCB();
     void insertReadyQueue(PCB* process,string name);
     void FCFS();
+    void SJF();
     void Dynamic_Priority_Time_Slice_Rotation(PCB* process);        //动态优先级时间片轮转法
     void showQueue();
     void showVisitPages(PCB *process);
@@ -53,8 +54,10 @@ private slots:
     void on_start_clicked();
     void on_pause_clicked(bool checked);
 
+
 public slots:
     void showProcess();
+
 
 
 private:

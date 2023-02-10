@@ -40,24 +40,24 @@ Memory::Memory(QWidget *parent) :
     this->initMemery();
 
     // 测试函数的代码
-    this->requestMemery(5,2);
-    this->requestMemery(3,1);
-    QTimer * timer = new QTimer(this);
-    QTimer * timer2 = new QTimer(this);
-    timer->start(1000);
-    Memory * that = this;
-    srand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
+//    this->requestMemery(5,2);
+//    this->requestMemery(3,1);
+//    QTimer * timer = new QTimer(this);
+//    QTimer * timer2 = new QTimer(this);
+//    timer->start(1000);
+//    Memory * that = this;
+//    srand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
 
-    connect(timer,&QTimer::timeout,[=](){
-        that->freeMemery(2);
-        timer->stop();
-    });
+//    connect(timer,&QTimer::timeout,[=](){
+//        that->freeMemery(2);
+//        timer->stop();
+//    });
 
-    timer2->start(1000);
-    connect(timer2,&QTimer::timeout,[=](){
-        int ran = rand() % 10;
-        that->replacePageByLRU(1,ran);
-    });
+//    timer2->start(1000);
+//    connect(timer2,&QTimer::timeout,[=](){
+//        int ran = rand() % 10;
+//        that->replacePageByLRU(1,ran);
+//    });
 
 }
 
@@ -104,6 +104,7 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
 }
 //请求内存块 最佳适配算法
 bool Memory::requestMemery(int pageFrame,int pid){
+    qDebug()<<"pid :"<<pid;
     struct freeMemeryBlock * tempBlock1;
     if(this->freeMemeryList == nullptr) return false;
     tempBlock1 = this->freeMemeryList;

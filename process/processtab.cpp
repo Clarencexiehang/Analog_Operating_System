@@ -1,6 +1,7 @@
 #include "processtab.h"
 #include "ui_processtab.h"
 
+#include "mainwindow.h"
 
 
 ProcessTab::ProcessTab(QWidget *parent) :
@@ -32,10 +33,8 @@ ProcessTab::ProcessTab(QWidget *parent) :
 
 
     //定时器
-    timer = new QTimer(this);
-    connect(timer,&QTimer::timeout,[=](){
-        this->FCFS();
-    });
+//    timer = new QTimer(this);
+//   connect(timer,SIGNAL(timeout()),this,SLOT(FCFS()));
 
 }
 
@@ -75,7 +74,8 @@ void ProcessTab::showQueue(){
 void ProcessTab::showVisitPages(PCB *process){
     ui->listWidget->clear();
     QStringList visitpage;
-    for (int i=0;i<10;i++) {
+    int num = process->needTime;
+    for (int i=0;i<num;i++) {
         visitpage<<QString::number(process->visit_pages[i]);
     }
 
@@ -133,12 +133,18 @@ void ProcessTab::insertReadyQueue(PCB* process,string name){
     process->equip = "无";
     process->visit_page_index = 0;
 
-    for(int i=0;i<10;i++){
+    for(int i=0;i<process->needTime;i++){
         process->visit_pages[i] = rand()%10;
     }
     //放入就绪队列
     processQueue.push_back(process);
     readyQueue.push_back(process);
+
+    extern MainWindow *w;
+//    string a="1";
+//    qDebug()<<std::stoi(a.c_str());
+//    w->memoryTab->requestMemery(5,stoi(process->name.c_str()));
+
 }
 
 
@@ -165,7 +171,8 @@ void ProcessTab::on_start_clicked()
 {
     //判断使用哪种调度方法
     if (ui->FCFS->isChecked()) {
-        this->FCFS();
+        // timer->start(1000); //启动定时器，运行完一个进程
+        FCFS();
     }else if(ui->SJF->isChecked()){
 
     }else if(ui->DPTSR->isChecked()){
@@ -175,7 +182,7 @@ void ProcessTab::on_start_clicked()
         return ;
     }
 
-    showProcess();
+
 }
 
 //暂停按钮
@@ -183,6 +190,14 @@ void ProcessTab::on_pause_clicked(bool checked)
 {
     if(checked){
         ui->pause->setStyleSheet("background-color:rgb(255,0,0)");
+        while(checked){
+            ui->textBrowser->insertPlainText("暂停！");
+            ui->textBrowser->moveCursor(QTextCursor::End);
+            ui->textBrowser->append(QString(""));
+            if(!checked){
+                 ui->pause->setStyleSheet("background-color:rgb(253,253,253)");
+            }
+        }
     }else{
         ui->pause->setStyleSheet("background-color:rgb(253,253,253)");
     }
@@ -190,9 +205,8 @@ void ProcessTab::on_pause_clicked(bool checked)
 }
 
 
-//先来先服务法
+/**************************************先来先服务法********************************************/
 void ProcessTab::FCFS(){
-
     while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
         PCB *runOne = readyQueue[0];
         readyQueue.erase(readyQueue.begin());
@@ -203,19 +217,27 @@ void ProcessTab::FCFS(){
         int usetime=1;
         while(runOne->needTime>0){
             runOne->needTime--;
-            //延时
-            t.start();
-            while(t.elapsed()<1000);
 
-            //更新表格状态
+            //更新进程信息，更新表格状态
             for(unsigned int i=0;i<processQueue.size();i++){
                 if(processQueue[i]->name==runOne->name){
                     strcpy( processQueue[i]->state, "运行");
                     processQueue[i]->needTime = runOne->needTime;
                     processQueue[i]->cpuTime = usetime++;
+                   // processQueue[i]->visit_page_index++;
                 }
             }
             this->showProcess();
+
+            //更新输出日志
+            ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
+                                              +",  已运行时间:"+ QString::number(runOne->cpuTime));
+            ui->textBrowser->moveCursor(QTextCursor::End);
+            ui->textBrowser->append(QString(""));
+
+            //延时1s
+            t.start();
+            while(t.elapsed()<1000);
         }
 
         runningQueue.pop_back();
@@ -228,11 +250,29 @@ void ProcessTab::FCFS(){
             }
         }
         this->showProcess();
+
+        ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
+        ui->textBrowser->moveCursor(QTextCursor::End);
+        ui->textBrowser->append(QString(""));
+
+        qDebug()<<"yes";
     }
-    qDebug()<<"yes";
 }
 
-//动态优先级时间片轮转法
+
+/**********************************短作业优先法*******************************/
+void ProcessTab::SJF(){
+    while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
+        PCB *runOne = readyQueue[0];
+        readyQueue.erase(readyQueue.begin());
+        runningQueue.push_back(runOne);
+        this->showQueue();
+        this->showVisitPages(runOne);
+    }
+}
+
+
+/**********************************动态优先级时间片轮转法*******************************/
 void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(PCB* process){
     sort(readyQueue.begin(),readyQueue.end(),compare);  //就绪队列排序
     runningQueue.erase(runningQueue.begin());   //清空运行队列
