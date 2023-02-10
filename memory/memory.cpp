@@ -43,20 +43,27 @@ Memory::Memory(QWidget *parent) :
 
 //    this->requestMemery(5,"22");
 //    this->requestMemery(3,"21");
+//    this->requestMemery(3,"23");
 //    QTimer * timer = new QTimer(this);
 //    QTimer * timer2 = new QTimer(this);
-//    timer->start(1000);
+//    timer->start(500);
 //    Memory * that = this;
+//    that->freeMemery("22");
+//    that->freeMemery("23");
 //    srand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
 //    connect(timer,&QTimer::timeout,[=](){
-//        that->freeMemery("22");
+
+////        that->requestMemery(3,"23");
 //        timer->stop();
 //    });
 //    timer2->start(1000);
 //    connect(timer2,&QTimer::timeout,[=](){
 //        int ran = rand() % 10;
+////        that->requestMemery(3,"24");
 //        that->replacePageByLRU("21",ran);
 //    });
+//    that->requestMemery(2,"1");
+//    that->requestMemery(7,"1");
 }
 
 Memory::~Memory()
@@ -102,14 +109,16 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
 }
 //请求内存块 最佳适配算法
 bool Memory::requestMemery(int pageFrame,QString pid){
+//    qDebug()<<"1111";
     struct freeMemeryBlock * tempBlock1;
+    struct freeMemeryBlock * tempBlock2;
+    tempBlock2 = nullptr;
     if(this->freeMemeryList == nullptr) return false;
     tempBlock1 = this->freeMemeryList;
     this->BubbleSort(tempBlock1);//空闲区排序
-
+    int flag = 0;
     while(tempBlock1!=nullptr){
-
-        if(tempBlock1->memeryBlockSize>pageFrame){
+        if(tempBlock1->memeryBlockSize>=pageFrame){
 
             struct usedMemeryBlock * block = new struct usedMemeryBlock();
             block->memeryBlockSize = pageFrame;
@@ -128,21 +137,32 @@ bool Memory::requestMemery(int pageFrame,QString pid){
             if(this->usedMemeryList!=nullptr)
                 block->nextBlock = this->usedMemeryList;
             this->usedMemeryList = block;
-
-            //qDebug()<<"1111";
-
             this->dye(block,0);//对已分配的内存进行染色
-
+            qDebug()<<tempBlock1->memeryBlockSize<<tempBlock1->startIndex;
             if(tempBlock1->memeryBlockSize!=pageFrame){
                tempBlock1->memeryBlockSize = tempBlock1->memeryBlockSize-pageFrame;
                tempBlock1->startIndex = tempBlock1->startIndex + pageFrame;
             }
             else {
-                tempBlock1 = nullptr;
+                if(tempBlock2==nullptr){
+                    this->freeMemeryList = tempBlock1->nextBlock;
+                    free(tempBlock1);
+                }
+                else{
+                    tempBlock2->nextBlock = tempBlock1->nextBlock;
+                    free(tempBlock1);
+                }
             }
             return true;
         }
         tempBlock1 = tempBlock1->nextBlock;
+        if(flag==0){
+          tempBlock2 = this->freeMemeryList;
+        }
+        else {
+            tempBlock2 = tempBlock2->nextBlock;
+            flag = 1;
+        }
     }
     return false;
 }
@@ -152,10 +172,18 @@ void Memory:: BubbleSort(freeMemeryBlock * &L)
     int i ,count = 0, num;//count记录链表结点的个数，num进行内层循环，
     freeMemeryBlock *p, *q, *tail;//创建三个指针，进行冒泡排序
     p = L;
-    while(p!= nullptr)//计算出结点的个数
+    struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
+    newBlock->memeryBlockSize = 20*20;
+    newBlock->endIndex = 399;
+    newBlock->startIndex = 0;
+    newBlock->nextBlock = p;
+    L = newBlock;
+    p = L;
+    while(p->nextBlock!= nullptr)//计算出结点的个数
     {
         count++;//注释①
         p = p->nextBlock;
+//        qDebug()<<count<<"+++";
     }
 //    qDebug()<<count;
     for(i = 0; i < count - 1; i++)//外层循环，跟数组冒泡排序一样
@@ -168,6 +196,7 @@ void Memory:: BubbleSort(freeMemeryBlock * &L)
         {
             if(q->startIndex > p->startIndex)//如果该结点的值大于后一个结点，则交换
             {
+//                qDebug()<<num<<"===";
                 q->nextBlock = p->nextBlock;
                 p->nextBlock = q;
                 tail->nextBlock = p;
@@ -177,6 +206,18 @@ void Memory:: BubbleSort(freeMemeryBlock * &L)
             p = q->nextBlock;//注释②
          }
     }
+    free(newBlock);
+    //
+    p = L->nextBlock;
+    L = L->nextBlock;
+
+    while(p!= nullptr)//计算出结点的个数
+    {
+        qDebug()<<p->memeryBlockSize<<"----"<<p->startIndex;
+        p = p->nextBlock;
+
+    }
+    qDebug()<<count<<"===";
 }
 //合并空闲内存
 void Memory::mergeFreeMemery(){
@@ -200,12 +241,6 @@ void Memory::mergeFreeMemery(){
 void Memory::freeMemery(QString pid){
     struct usedMemeryBlock * block;
     block = this->usedMemeryList;
-//    block1 = this->usedMemeryList;
-//    while(block1!=nullptr){
-//        qDebug()<<"eeee";
-//        qDebug()<<block1->pid;
-//        block1 = block1->nextBlock;
-//    }
     if(block->pid == pid){
         this->usedMemeryList = block->nextBlock;
         struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
@@ -219,7 +254,7 @@ void Memory::freeMemery(QString pid){
     }
     else{
         while(block->nextBlock!=nullptr && block->nextBlock->pid != pid){
-            qDebug()<<block->pid;
+//            qDebug()<<block->pid;
             block = block->nextBlock;
         }
         if(block->nextBlock==nullptr){
@@ -228,9 +263,9 @@ void Memory::freeMemery(QString pid){
         else{
 
             struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
-            newBlock->memeryBlockSize = block->memeryBlockSize;
-            newBlock->endIndex = block->endIndex;
-            newBlock->startIndex = block->startIndex;
+            newBlock->memeryBlockSize = block->nextBlock->memeryBlockSize;
+            newBlock->endIndex = block->nextBlock->endIndex;
+            newBlock->startIndex = block->nextBlock->startIndex;
             newBlock->nextBlock = this->freeMemeryList;
             this->freeMemeryList = newBlock;
             this->dye(block->nextBlock,1);
@@ -238,6 +273,7 @@ void Memory::freeMemery(QString pid){
             free(block->nextBlock);
         }
     }
+    this->mergeFreeMemery();
 }
 
 //页面置换算法 最久未使用算法
