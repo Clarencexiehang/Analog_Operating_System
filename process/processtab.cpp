@@ -205,7 +205,8 @@ void ProcessTab::on_deleteprocess_clicked()
         return ;
     }
     qDebug()<<"pid:"<<ui->processtable->item(currentRow,0)->text();
-    w->memoryTab->freeMemery(ui->processtable->item(currentRow,0)->text());qDebug()<<"flag2";
+    w->memoryTab->freeMemery(ui->processtable->item(currentRow,0)->text());
+    qDebug()<<"flag2";
     ui->processtable->removeRow(currentRow);
 
 }

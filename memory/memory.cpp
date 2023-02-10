@@ -48,19 +48,19 @@ Memory::Memory(QWidget *parent) :
 //    QTimer * timer2 = new QTimer(this);
 //    timer->start(500);
 //    Memory * that = this;
-//    that->freeMemery("22");
-//    that->freeMemery("23");
 //    srand(QTime(0, 0, 0).secsTo(QTime::currentTime()));
 //    connect(timer,&QTimer::timeout,[=](){
-
+//        that->freeMemery("21");
 ////        that->requestMemery(3,"23");
 //        timer->stop();
 //    });
 //    timer2->start(1000);
 //    connect(timer2,&QTimer::timeout,[=](){
 //        int ran = rand() % 10;
+//        that->freeMemery("22");
 ////        that->requestMemery(3,"24");
 //        that->replacePageByLRU("21",ran);
+//        timer2->stop();
 //    });
 //    that->requestMemery(2,"1");
 //    that->requestMemery(7,"1");
@@ -134,8 +134,7 @@ bool Memory::requestMemery(int pageFrame,QString pid){
             block->endIndex = tempBlock1->startIndex + pageFrame - 1;
             block->startIndex = tempBlock1->startIndex;
             block->pid = pid;
-            if(this->usedMemeryList!=nullptr)
-                block->nextBlock = this->usedMemeryList;
+            block->nextBlock = this->usedMemeryList;
             this->usedMemeryList = block;
             this->dye(block,0);//对已分配的内存进行染色
             qDebug()<<tempBlock1->memeryBlockSize<<tempBlock1->startIndex;
@@ -211,13 +210,12 @@ void Memory:: BubbleSort(freeMemeryBlock * &L)
     p = L->nextBlock;
     L = L->nextBlock;
 
-    while(p!= nullptr)//计算出结点的个数
-    {
-        qDebug()<<p->memeryBlockSize<<"----"<<p->startIndex;
-        p = p->nextBlock;
+//    while(p!= nullptr)//计算出结点的个数
+//    {
+//        qDebug()<<p->memeryBlockSize<<"----"<<p->startIndex;
+//        p = p->nextBlock;
 
-    }
-    qDebug()<<count<<"===";
+//    }
 }
 //合并空闲内存
 void Memory::mergeFreeMemery(){
@@ -240,6 +238,7 @@ void Memory::mergeFreeMemery(){
 //释放内存
 void Memory::freeMemery(QString pid){
     struct usedMemeryBlock * block;
+    struct usedMemeryBlock * block1;
     block = this->usedMemeryList;
     if(block->pid == pid){
         this->usedMemeryList = block->nextBlock;
@@ -249,16 +248,18 @@ void Memory::freeMemery(QString pid){
         newBlock->startIndex = block->startIndex;
         newBlock->nextBlock = this->freeMemeryList;
         this->freeMemeryList = newBlock;
+
         this->dye(block,1);
         free(block);
+
     }
     else{
         while(block->nextBlock!=nullptr && block->nextBlock->pid != pid){
-//            qDebug()<<block->pid;
+            qDebug()<<block->nextBlock->pid<<"44444";
             block = block->nextBlock;
         }
         if(block->nextBlock==nullptr){
-            qDebug()<<"pid找不到";
+            qDebug()<<"pid找不到"<<pid;
         }
         else{
 
@@ -269,8 +270,9 @@ void Memory::freeMemery(QString pid){
             newBlock->nextBlock = this->freeMemeryList;
             this->freeMemeryList = newBlock;
             this->dye(block->nextBlock,1);
+            block1 = block->nextBlock;
             block->nextBlock = block->nextBlock->nextBlock;
-            free(block->nextBlock);
+            free(block1);
         }
     }
     this->mergeFreeMemery();
