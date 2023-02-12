@@ -195,7 +195,7 @@ bool Memory::requestMemery(int pageFrame,QString pid){
         block->requestPageList[i] = -1;
     }
     for(i=0;i<pageFrame;i++){
-         block->pageList[pageFrame][0] = -1;
+         block->pageList[i][0] = -1;
     }
     for(int i=0;i<400;i++){
         if(this->isUsed[i]==0){
@@ -334,6 +334,7 @@ void Memory::replacePageByLRU(QString pid,int page){
     int i;
     for(int k=0;k<block->memeryBlockSize;k++){
         //进入页在内存中
+
         i = block->pageList[k][1]/20;
         j = block->pageList[k][1]%20;
         if(block->pageList[k][0] == page){
@@ -342,6 +343,7 @@ void Memory::replacePageByLRU(QString pid,int page){
             return;
         }
     }
+
     //内存空间未满
     if(block->blockSize<block->memeryBlockSize){
         block->blockSize++;
