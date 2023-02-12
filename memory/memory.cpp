@@ -1,13 +1,21 @@
 #include "memory.h"
 #include "ui_memory.h"
+#include "mainwindow.h"
 #include <QPushButton>
 #include <QMenuBar>
 #include <QPainter>
 #include <QMessageBox>
 #include <QDebug>
 #include <QTimer>
-
 #include <QDateTime>
+extern MainWindow *w;
+int color[5][3] = {
+    {33,222,28},
+    {188,133,240},
+    {237,14,111},
+    {240,20,138},
+    {24,237,14}
+};
 Memory::Memory(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Memory)
@@ -72,98 +80,131 @@ Memory::~Memory()
 }
 //初始化内存块的函数；
 void Memory::initMemery(){
-    struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
-    newBlock->memeryBlockSize = 20*20;
-    newBlock->endIndex = 399;
-    newBlock->startIndex = 0;
-    newBlock->nextBlock = nullptr;
-    this->freeMemeryList = newBlock;
+//    struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
+//    newBlock->memeryBlockSize = 20*20;
+//    newBlock->endIndex = 399;
+//    newBlock->startIndex = 0;
+//    newBlock->nextBlock = nullptr;
+//    this->freeMemeryList = newBlock;
+    for(int i=0;i<400;i++){
+        this->isUsed[i] = 0;
+    }
     this->usedMemeryList = nullptr;
 }
 void Memory::dye(struct usedMemeryBlock * block,int flag){
-    int j = block->startIndex%20;
-    int i = block->startIndex/20;
+    int j;
+    int i;
     for (int k=0;k<block->memeryBlockSize;k++){
 //        qDebug()<<text;
+        i = block->pageList[k][1]/20;
+        j = block->pageList[k][1]%20;
         ui->memeryTable->item(i,j)->setFont(QFont("song", 10));
         if(flag==0){
             QString text;
             text = block->pid+"|-1";
             ui->memeryTable->item(i,j)->setText(text);
-            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(color[block->ranking][0],color[block->ranking][1],color[block->ranking][2])));
         }
         else if(flag==1){
             ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(200,200,200)));
             ui->memeryTable->item(i,j)->setText("");
         }
         else{
-            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(237,19,80)));
-        }
-
-        j++;
-        if(j==20){
-            i++;
-            j = 0;
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(color[block->ranking][0],color[block->ranking][1],color[block->ranking][2])));
         }
     }
 }
-//请求内存块 最佳适配算法
+//请求内存块 首次适应算法
+
+//bool Memory::requestMemery1(int pageFrame,QString pid){
+////    qDebug()<<"1111";
+//    struct freeMemeryBlock * tempBlock1;
+//    struct freeMemeryBlock * tempBlock2;
+//    tempBlock2 = nullptr;
+//    if(this->freeMemeryList == nullptr) return false;
+//    tempBlock1 = this->freeMemeryList;
+//    this->BubbleSort(tempBlock1);//空闲区排序
+//    int flag = 0;
+//    while(tempBlock1!=nullptr){
+//        if(tempBlock1->memeryBlockSize>=pageFrame){
+
+//            struct usedMemeryBlock * block = new struct usedMemeryBlock();
+//            block->memeryBlockSize = pageFrame;
+
+//            for(int i=0;i<5;i++){
+
+//                block->pageList[i][0] = -1;
+
+//            }
+//            for(int i=0;i<50;i++){
+//                block->requestPageList[i] = -1;
+//            }
+
+////            block->endIndex = tempBlock1->startIndex + pageFrame - 1;
+////            block->startIndex = tempBlock1->startIndex;
+//            block->pid = pid;
+//            block->nextBlock = this->usedMemeryList;
+//            this->usedMemeryList = block;
+//            this->dye(block,0);//对已分配的内存进行染色
+//            qDebug()<<tempBlock1->memeryBlockSize<<tempBlock1->startIndex;
+//            if(tempBlock1->memeryBlockSize!=pageFrame){
+//               tempBlock1->memeryBlockSize = tempBlock1->memeryBlockSize-pageFrame;
+//               tempBlock1->startIndex = tempBlock1->startIndex + pageFrame;
+//            }
+//            else {
+//                if(tempBlock2==nullptr){
+//                    this->freeMemeryList = tempBlock1->nextBlock;
+//                    free(tempBlock1);
+//                }
+//                else{
+//                    tempBlock2->nextBlock = tempBlock1->nextBlock;
+//                    free(tempBlock1);
+//                }
+//            }
+//            return true;
+//        }
+//        tempBlock1 = tempBlock1->nextBlock;
+//        if(flag==0){
+//          tempBlock2 = this->freeMemeryList;
+//        }
+//        else {
+//            tempBlock2 = tempBlock2->nextBlock;
+//            flag = 1;
+//        }
+//    }
+
+//    return false;
+//}
+
+//请求内存块 分页式
 bool Memory::requestMemery(int pageFrame,QString pid){
-//    qDebug()<<"1111";
-    struct freeMemeryBlock * tempBlock1;
-    struct freeMemeryBlock * tempBlock2;
-    tempBlock2 = nullptr;
-    if(this->freeMemeryList == nullptr) return false;
-    tempBlock1 = this->freeMemeryList;
-    this->BubbleSort(tempBlock1);//空闲区排序
-    int flag = 0;
-    while(tempBlock1!=nullptr){
-        if(tempBlock1->memeryBlockSize>=pageFrame){
-
-            struct usedMemeryBlock * block = new struct usedMemeryBlock();
-            block->memeryBlockSize = pageFrame;
-
-            for(int i=0;i<5;i++){
-
-                block->pageList[i] = -1;
-            }
-            for(int i=0;i<50;i++){
-                block->requestPageList[i] = -1;
-            }
-
-            block->endIndex = tempBlock1->startIndex + pageFrame - 1;
-            block->startIndex = tempBlock1->startIndex;
-            block->pid = pid;
-            block->nextBlock = this->usedMemeryList;
-            this->usedMemeryList = block;
-            this->dye(block,0);//对已分配的内存进行染色
-            qDebug()<<tempBlock1->memeryBlockSize<<tempBlock1->startIndex;
-            if(tempBlock1->memeryBlockSize!=pageFrame){
-               tempBlock1->memeryBlockSize = tempBlock1->memeryBlockSize-pageFrame;
-               tempBlock1->startIndex = tempBlock1->startIndex + pageFrame;
-            }
-            else {
-                if(tempBlock2==nullptr){
-                    this->freeMemeryList = tempBlock1->nextBlock;
-                    free(tempBlock1);
-                }
-                else{
-                    tempBlock2->nextBlock = tempBlock1->nextBlock;
-                    free(tempBlock1);
-                }
-            }
-            return true;
-        }
-        tempBlock1 = tempBlock1->nextBlock;
-        if(flag==0){
-          tempBlock2 = this->freeMemeryList;
-        }
-        else {
-            tempBlock2 = tempBlock2->nextBlock;
-            flag = 1;
+    int count = 0;
+    struct usedMemeryBlock * block = new struct usedMemeryBlock();
+    block->memeryBlockSize = pageFrame;
+    block->pid = pid;
+    block->nextBlock = this->usedMemeryList;
+    block->ranking = this->proCount;
+    this->usedMemeryList = block;
+    int i;
+    for(i=0;i<50;i++){
+        block->requestPageList[i] = -1;
+    }
+    for(i=0;i<pageFrame;i++){
+         block->pageList[pageFrame][0] = -1;
+    }
+    for(int i=0;i<400;i++){
+        if(this->isUsed[i]==0){
+            block->pageList[count][1] = i;
+            this->isUsed[i] = 1;
+            count++;
+            if(count==pageFrame) break;
         }
     }
-    return false;
+    if(i==400) return false;
+    this->dye(block,0);//对已分配的内存进行染色
+    this->proCount++;
+    w->diskTab->createVirtualMemoryBlock(pid,block->ranking);
+    return true;
 }
 //链表排序
 void Memory:: BubbleSort(freeMemeryBlock * &L)
@@ -240,15 +281,12 @@ void Memory::freeMemery(QString pid){
     struct usedMemeryBlock * block;
     struct usedMemeryBlock * block1;
     block = this->usedMemeryList;
+    w->diskTab->freeMemory(pid);
     if(block->pid == pid){
         this->usedMemeryList = block->nextBlock;
-        struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
-        newBlock->memeryBlockSize = block->memeryBlockSize;
-        newBlock->endIndex = block->endIndex;
-        newBlock->startIndex = block->startIndex;
-        newBlock->nextBlock = this->freeMemeryList;
-        this->freeMemeryList = newBlock;
-
+        for(int i =0;i<block->memeryBlockSize;i++){
+            this->isUsed[block->pageList[i][1]] = 0;
+        }
         this->dye(block,1);
         free(block);
 
@@ -263,19 +301,15 @@ void Memory::freeMemery(QString pid){
         }
         else{
 
-            struct freeMemeryBlock * newBlock = new struct freeMemeryBlock();
-            newBlock->memeryBlockSize = block->nextBlock->memeryBlockSize;
-            newBlock->endIndex = block->nextBlock->endIndex;
-            newBlock->startIndex = block->nextBlock->startIndex;
-            newBlock->nextBlock = this->freeMemeryList;
-            this->freeMemeryList = newBlock;
+            for(int i =0;i<block->nextBlock->memeryBlockSize;i++){
+                this->isUsed[block->nextBlock->pageList[i][1]] = 0;
+            }
             this->dye(block->nextBlock,1);
             block1 = block->nextBlock;
             block->nextBlock = block->nextBlock->nextBlock;
             free(block1);
         }
     }
-    this->mergeFreeMemery();
 }
 
 //页面置换算法 最久未使用算法
@@ -289,32 +323,32 @@ void Memory::replacePageByLRU(QString pid,int page){
     if(block == nullptr) return;
     block->requestPageList[block->requestPageCount] = page;
     block->requestPageCount++;
+//    qDebug()<<"----"<<page<<pid;
     //初始化
-    int j = block->startIndex%20;
-    int i = block->startIndex/20;
+    int j;
+    int i;
     for(int k=0;k<block->memeryBlockSize;k++){
         //进入页在内存中
-        if(block->pageList[k] == page){
+        i = block->pageList[k][1]/20;
+        j = block->pageList[k][1]%20;
+        if(block->pageList[k][0] == page){
             this->dye(block,2);
             ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(16,126,239)));
             return;
         }
-        j++;
-        if(j==20){
-            i++;
-            j = 0;
-        }
     }
     //内存空间未满
-    if(block->requestPageCount<=block->memeryBlockSize){
-        block->pageList[block->requestPageCount-1] = page;
-        int index = (block->startIndex+block->requestPageCount-1)/20;
-        int jindex = (block->startIndex+block->requestPageCount-1)%20;
+    if(block->blockSize<block->memeryBlockSize){
+        block->blockSize++;
+        block->pageList[block->blockSize-1][0] = page;
+        i = block->pageList[block->blockSize-1][1]/20;
+        j = block->pageList[block->blockSize-1][1]%20;
         this->dye(block,2);
-        ui->memeryTable->item(index,jindex)->setBackground(QBrush(QColor(16,126,239)));
+        ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(16,126,239)));
         QString text;
 //        text = "" + page;
-        ui->memeryTable->item(index,jindex)->setText(QString::number(page));
+        ui->memeryTable->item(i,j)->setText(QString::number(page));
+        w->diskTab->replacePage(pid,page);
     }
     else{
         //寻找替换的位置
@@ -328,7 +362,7 @@ void Memory::replacePageByLRU(QString pid,int page){
         for(k = block->requestPageCount-1;k>=0;k--){
             int z;
             for(z=0;z<block->memeryBlockSize;z++){
-                if(block->requestPageList[k] == block->pageList[z]){
+                if(block->requestPageList[k] == block->pageList[z][0]){
                     if(postion[z]!=0)
                     {
                         postion[z] = 0;
@@ -348,14 +382,16 @@ void Memory::replacePageByLRU(QString pid,int page){
             }
         }
         //置换
-        int xindex = (block->startIndex+index)/20;
-        int yindex = (block->startIndex+index)%20;
+        w->diskTab->replacePage(pid,page);
+        int xindex = block->pageList[index][1]/20;
+        int yindex = block->pageList[index][1]%20;
         this->dye(block,2);
-        block->pageList[index] = page;
+        block->pageList[index][0] = page;
         ui->memeryTable->item(xindex,yindex)->setBackground(QBrush(QColor(16,126,239)));
         QString text;
 //        text = "" + page;
         ui->memeryTable->item(xindex,yindex)->setText(QString::number(page));
+
     }
 }
 

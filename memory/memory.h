@@ -13,14 +13,15 @@ struct freeMemeryBlock{
     freeMemeryBlock *nextBlock;
 };
 struct usedMemeryBlock{
-    int startIndex;
-    int endIndex;
+//    int startIndex;
+//    int endIndex;
     int memeryBlockSize;
     QString pid;
     int requestPageList[50];
+    int blockSize = 0;
     int requestPageCount = 0;
-
-    int pageList[5];
+    int ranking;
+    int pageList[5][2];
 
     usedMemeryBlock *nextBlock;
 };
@@ -32,6 +33,8 @@ public:
     explicit Memory(QWidget *parent = nullptr);
     usedMemeryBlock * usedMemeryList;
     freeMemeryBlock * freeMemeryList;
+    int isUsed[400];
+    int proCount = 0;
     void paintEvent(QPaintEvent *);
     void initMemery();
     void BubbleSort(freeMemeryBlock * &L);
