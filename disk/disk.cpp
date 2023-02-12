@@ -1,11 +1,16 @@
 #include "disk.h"
 #include "ui_disk.h"
-int color1[5][3] = {
+int color1[10][3] = {
     {33,222,28},
     {188,133,240},
     {237,14,111},
     {240,20,138},
-    {24,237,14}
+    {233,198,1},
+    {233,94,1},
+    {10,211,229},
+    {180,10,229},
+    {10,133,190},
+    {9,154,135}
 };
 Disk::Disk(QWidget *parent) :
     QWidget(parent),
@@ -27,7 +32,7 @@ void Disk::createVirtualMemoryBlock(QString pid,int ranking){
     block->nextBlock = this->virtualMemoryBlock;
     this->virtualMemoryBlock = block;
     for (int k=0;k<20;k++){
-        ui->virtualMemory->item(i,k)->setBackground(QBrush(QColor(color1[ranking][0],color1[ranking][1],color1[ranking][2])));
+        ui->virtualMemory->item(i,k)->setBackground(QBrush(QColor(color1[ranking%10][0],color1[ranking%10][1],color1[ranking%10][2])));
     }
 }
 void Disk::initvirtualMemory(){
@@ -77,6 +82,7 @@ void Disk::freeMemory(QString pid){
             ui->virtualMemory->item(block->startIndex,k)->setBackground(QBrush(QColor(200,200,200)));
         }
         this->virtualMemoryBlock = block->nextBlock;
+        this->isUsed[block->startIndex] = 0;
         free(block);
         return;
     }

@@ -9,12 +9,17 @@
 #include <QTimer>
 #include <QDateTime>
 extern MainWindow *w;
-int color[5][3] = {
+int color[10][3] = {
     {33,222,28},
     {188,133,240},
     {237,14,111},
     {240,20,138},
-    {24,237,14}
+    {233,198,1},
+    {233,94,1},
+    {10,211,229},
+    {180,10,229},
+    {10,133,190},
+    {9,154,135}
 };
 Memory::Memory(QWidget *parent) :
     QWidget(parent),
@@ -103,14 +108,14 @@ void Memory::dye(struct usedMemeryBlock * block,int flag){
             QString text;
             text = block->pid+"|-1";
             ui->memeryTable->item(i,j)->setText(text);
-            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(color[block->ranking][0],color[block->ranking][1],color[block->ranking][2])));
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(color[block->ranking%10][0],color[block->ranking%10][1],color[block->ranking%10][2])));
         }
         else if(flag==1){
             ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(200,200,200)));
             ui->memeryTable->item(i,j)->setText("");
         }
         else{
-            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(color[block->ranking][0],color[block->ranking][1],color[block->ranking][2])));
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(color[block->ranking%10][0],color[block->ranking%10][1],color[block->ranking%10][2])));
         }
     }
 }
