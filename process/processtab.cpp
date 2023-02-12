@@ -204,9 +204,8 @@ void ProcessTab::on_deleteprocess_clicked()
         ui->processtable->removeRow(currentRow);
         return ;
     }
-    qDebug()<<"pid:"<<ui->processtable->item(currentRow,0)->text();
+//    qDebug()<<"pid:"<<ui->processtable->item(currentRow,0)->text();
     w->memoryTab->freeMemery(ui->processtable->item(currentRow,0)->text());
-    qDebug()<<"flag2";
     ui->processtable->removeRow(currentRow);
 
 }
@@ -307,6 +306,7 @@ void ProcessTab::SJF(){
 
         while(runOne->needTime>0){
             runOne->needTime--;
+            runOne->cpuTime++;
 
             //更新进程信息，更新表格状态
             this->updateTableWidget(runOne,"运行");
