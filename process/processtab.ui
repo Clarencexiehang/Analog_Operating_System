@@ -22,15 +22,15 @@
   <widget class="QPushButton" name="createprocess">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>40</y>
-     <width>71</width>
+     <x>0</x>
+     <y>60</y>
+     <width>80</width>
      <height>40</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
-     <width>70</width>
+     <width>80</width>
      <height>40</height>
     </size>
    </property>
@@ -46,9 +46,9 @@
   <widget class="QTableWidget" name="processtable">
    <property name="geometry">
     <rect>
-     <x>100</x>
+     <x>90</x>
      <y>30</y>
-     <width>521</width>
+     <width>531</width>
      <height>291</height>
     </rect>
    </property>
@@ -61,15 +61,15 @@
   <widget class="QPushButton" name="deleteprocess">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>110</y>
-     <width>71</width>
+     <x>0</x>
+     <y>130</y>
+     <width>80</width>
      <height>40</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
-     <width>70</width>
+     <width>80</width>
      <height>40</height>
     </size>
    </property>
@@ -82,48 +82,18 @@
     <string>删除进程</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pause">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>250</y>
-     <width>71</width>
-     <height>40</height>
-    </rect>
-   </property>
-   <property name="minimumSize">
-    <size>
-     <width>70</width>
-     <height>40</height>
-    </size>
-   </property>
-   <property name="font">
-    <font>
-     <family>黑体</family>
-    </font>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>暂停</string>
-   </property>
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-  </widget>
   <widget class="QPushButton" name="start">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>180</y>
-     <width>71</width>
+     <x>0</x>
+     <y>200</y>
+     <width>80</width>
      <height>40</height>
     </rect>
    </property>
    <property name="minimumSize">
     <size>
-     <width>70</width>
+     <width>80</width>
      <height>40</height>
     </size>
    </property>
@@ -215,7 +185,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>410</y>
+     <y>430</y>
      <width>72</width>
      <height>15</height>
     </rect>
@@ -241,7 +211,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>450</y>
+     <y>470</y>
      <width>115</width>
      <height>19</height>
     </rect>
@@ -254,7 +224,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>480</y>
+     <y>510</y>
      <width>115</width>
      <height>19</height>
     </rect>
@@ -267,7 +237,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>510</y>
+     <y>550</y>
      <width>115</width>
      <height>19</height>
     </rect>
@@ -332,6 +302,36 @@
      <width>441</width>
      <height>31</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="reset">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>270</y>
+     <width>80</width>
+     <height>40</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>80</width>
+     <height>40</height>
+    </size>
+   </property>
+   <property name="font">
+    <font>
+     <family>黑体</family>
+    </font>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>重置</string>
+   </property>
+   <property name="checkable">
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

@@ -18,6 +18,7 @@ public:
     string equip;           /*使用设备*/
     int visit_pages[20];    /*进程访问的页面顺序*/
     int visit_page_index;   /*进程将要访问的页面下标*/
+    string behaviour;
 
 public:
     PCB();

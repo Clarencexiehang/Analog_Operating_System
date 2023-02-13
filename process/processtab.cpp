@@ -34,8 +34,8 @@ ProcessTab::ProcessTab(QWidget *parent) :
 
     //定时器
 //    timer = new QTimer(this);
-//   connect(timer,SIGNAL(timeout()),this,SLOT(on_createprocess_clicked()));
-//   timer->start(1000);
+//    connect(timer,SIGNAL(timeout()),this,SLOT(on_pause_clicked(bool checked)));
+//    timer->start(100);
 
 }
 
@@ -65,7 +65,7 @@ void ProcessTab::showQueue(){
 
     //阻塞队列
     QStringList blockProcess;
-    for (int i=0;i<blockProcess.size();i++) {
+    for (int i=0;i<blockQueue.size();i++) {
         blockProcess<<QString::fromStdString(blockQueue[i]->name);
     }
     ui->listWidget_block->addItems(blockProcess);
@@ -155,6 +155,7 @@ void ProcessTab::insertReadyQueue(PCB* process,string name){
     strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
     process->equip = "无";
     process->visit_page_index = 0;
+    process->behaviour = "null";
 
     for(int i=0;i<process->needTime;i++){
         process->visit_pages[i] = rand()%20;
@@ -229,37 +230,41 @@ void ProcessTab::on_start_clicked()
 
 }
 
-//暂停按钮
-void ProcessTab::on_pause_clicked(bool checked)
-{
-    if(checked){
-        ui->pause->setStyleSheet("background-color:rgb(255,0,0)");
-        while(checked){
-            ui->textBrowser->insertPlainText("暂停！");
-            ui->textBrowser->moveCursor(QTextCursor::End);
-            ui->textBrowser->append(QString(""));
-            if(!checked){
-                 ui->pause->setStyleSheet("background-color:rgb(253,253,253)");
-            }
-        }
-    }else{
-        ui->pause->setStyleSheet("background-color:rgb(253,253,253)");
-    }
 
+//重置按钮
+void ProcessTab::on_reset_clicked()
+{
+    for (int i=0;i<processQueue.size();i++) {
+        if(strcmp(processQueue[i]->state,"完成")!=0){
+            w->memoryTab->freeMemery(QString::fromStdString( processQueue[i]->name));
+        }
+    }
+    readyQueue.clear();
+    processQueue.clear();
+    Random_Create_PCB();
+    Create_Process_For_Synchronization();
+    showProcess();
 }
+
+
 
 
 /**************************************先来先服务法********************************************/
 void ProcessTab::FCFS(){
+h:
     while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
-        PCB *runOne = readyQueue[0];
+        PCB *runOne = readyQueue[0];    //qDebug()<<"ready"<<readyQueue.size();
         readyQueue.erase(readyQueue.begin());
         runningQueue.push_back(runOne);
         this->showQueue();
         this->showVisitPages(runOne);
 
+
+
         while(runOne->needTime>0){
+
             runOne->needTime--;
+            runOne->cpuTime++;
 
             //更新进程信息，更新表格状态
             this->updateTableWidget(runOne,"运行");
@@ -343,15 +348,33 @@ bool ProcessTab::compare(PCB* a,PCB* b){
 
 
 void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(){
-    while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
+h:  while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
         sort(readyQueue.begin(),readyQueue.end(),ProcessTab::compare);  //就绪队列排序
         PCB *runOne = readyQueue[0];
         readyQueue.erase(readyQueue.begin());
+        strcpy(runOne->state, "运行");
         runningQueue.push_back(runOne);
         this->showQueue();
         this->showVisitPages(runOne);
 
-        strcpy(runOne->state, "运行");
+
+        //判断进程是否有事件，进行PV操作
+        bool flag;
+        if(runOne->behaviour == "键盘输入" && !isUsed1){
+            isUsed1 = true;
+            flag = this->Process_Behaviour("键盘输入",runOne);
+            if(flag){
+                goto h;
+            }
+
+        }else if(runOne->behaviour == "获取键值" && !isUsed2){
+            isUsed2 = true;
+            flag = this->Process_Behaviour("获取键值",runOne);
+            if(flag){
+                goto h;
+            };
+        }
+
 
         //如果进程的所需执行时间<时间片，则进程执行完毕
         if(runOne->needTime<=runOne->round){
@@ -366,6 +389,14 @@ void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(){
             ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
             ui->textBrowser->moveCursor(QTextCursor::End);
             ui->textBrowser->append(QString(""));
+
+            if(runOne->behaviour == "键盘输入"){
+                V(mutex);
+                flag = V(semaphore_full);
+            }else if(runOne->behaviour == "获取键值"){
+                V(this->mutex);
+                V(semaphore_keyboard);
+            }
 
         }
         //如果进程没有执行完
@@ -413,3 +444,111 @@ void ProcessTab::Dynamic_Priority_Time_Slice_Rotation(){
     }
 }
 
+
+/**************************************** 信号量模拟进程同步 *************************************************/
+bool ProcessTab::P(int &semaphore){
+    semaphore--;                //qDebug()<<"P--full:"<<semaphore;
+    if(semaphore<0){
+        PCB* tempProcess = runningQueue[0];
+        runningQueue.clear();
+        strcpy(tempProcess->state, "阻塞");
+        blockQueue.push_back(tempProcess);
+        return true;
+    }
+    return false;
+}
+
+bool ProcessTab::V(int &semaphore){
+    semaphore++;
+
+    //唤醒一个进程
+    if(semaphore<=0){
+        semaphore++;
+        PCB* tempProcess = blockQueue[0];
+        blockQueue.erase(blockQueue.begin());
+        strcpy(tempProcess->state, "就绪");
+        readyQueue.push_back(tempProcess);
+        return true;
+    }
+    return  false;
+}
+
+//模拟进程的行为
+bool ProcessTab::Process_Behaviour(string behaviour,PCB* runOne){
+    bool flag;
+    if(behaviour == "键盘输入"){
+        flag = P(this->semaphore_keyboard);
+        P(this->mutex);
+
+        //日志
+        ui->textBrowser->insertPlainText("键盘正在输入...");
+        ui->textBrowser->moveCursor(QTextCursor::End);
+        ui->textBrowser->append(QString(""));
+        QCoreApplication::processEvents();
+        return flag;
+    }
+
+    else if(behaviour == "获取键值"){
+        flag = P(semaphore_full);
+
+        if(flag == true){
+            return flag;
+        }
+
+        P(this->mutex);
+        //日志
+        ui->textBrowser->insertPlainText("正在获取键值...");
+        ui->textBrowser->moveCursor(QTextCursor::End);
+        ui->textBrowser->append(QString(""));
+        QCoreApplication::processEvents();
+
+        return flag;
+    }
+
+}
+
+//创建进程模拟进程同步
+void ProcessTab::Create_Process_For_Synchronization(){
+    PCB* p2 = new PCB;
+    p2->name = "获取键值";
+    p2->needTime = rand()%19+1;
+    p2->prio = 20 - p2->needTime;
+    p2->round = 2;
+    p2->cpuTime = 0;
+    strcpy(p2->state, "就绪");    //默认创建的新进程是就绪状态
+    p2->equip = "键盘";
+    p2->visit_page_index = 0;
+    p2->behaviour = "获取键值";
+
+    for(int i=0;i<p2->needTime;i++){
+        p2->visit_pages[i] = rand()%20;
+    }
+    //放入就绪队列
+    processQueue.push_back(p2);
+    readyQueue.push_back(p2);
+
+    //分配内存
+    w->memoryTab->requestMemery(5,QString::fromStdString(p2->name));
+
+    PCB* p1 = new PCB;
+    p1->name = "键盘输入";
+    p1->needTime = rand()%19+1;
+    p1->prio = 20 - p1->needTime;
+    p1->round = 2;
+    p1->cpuTime = 0;
+    strcpy(p1->state, "就绪");    //默认创建的新进程是就绪状态
+    p1->equip = "键盘";
+    p1->visit_page_index = 0;
+    p1->behaviour = "键盘输入";
+
+    for(int i=0;i<p1->needTime;i++){
+        p1->visit_pages[i] = rand()%20;
+    }
+    //放入就绪队列
+    processQueue.push_back(p1);
+    readyQueue.push_back(p1);
+
+    //分配内存
+    w->memoryTab->requestMemery(5,QString::fromStdString(p1->name));
+
+}
