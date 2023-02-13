@@ -14,9 +14,7 @@
 #include "QMessageBox"
 #include "QStringListModel"
 #include "QTimer"
-#include <QElapsedTimer>
-
-
+#include <QElapsedTimer>4
 
 namespace Ui {
 class ProcessTab;
@@ -45,16 +43,24 @@ public:
     void Dynamic_Priority_Time_Slice_Rotation();        //动态优先级时间片轮转法
     void showQueue();
     void showVisitPages(PCB *process);
-
     void updateTableWidget(PCB *runOne,string state);
+
+    int semaphore_keyboard = 1;
+    int semaphore_full = 0;
+    int mutex = 1;
+    bool isUsed1 = false;
+    bool isUsed2 = false;
+    bool P(int &semaphore);
+    bool V(int &semaphore);
+    bool Process_Behaviour(string behaviour,PCB* runOne);
+    void Create_Process_For_Synchronization();
 
 
 private slots:
     void on_createprocess_clicked();
     void on_deleteprocess_clicked();
     void on_start_clicked();
-    void on_pause_clicked(bool checked);
-
+    void on_reset_clicked();
 
 public slots:
     void showProcess();

@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     //随机产生进程并展示
     srand(time(nullptr));
     w->processTab->Random_Create_PCB();
+    w->processTab->Create_Process_For_Synchronization();
     w->processTab->showProcess();
 
     w->show();
