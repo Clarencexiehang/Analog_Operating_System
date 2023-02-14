@@ -34,20 +34,9 @@ void processDialog::on_pushButton_ok_clicked()
     QString cpuTime = ui->lineEdit_cpuTime->text();
 
     //存入readyQueue中
-    PCB* process = new PCB;
-    process->name = name.toStdString();
+    PCB* process = new PCB(name.toStdString());
     process->needTime = cpuTime.toInt();
     process->prio = prio.toInt();
-    process->round = 1;
-    process->cpuTime = 0;
-    process->equip = "无";
-    process->visit_page_index = 0;
-    for(int i=0;i<process->needTime;i++){
-        process->visit_pages[i] = rand()%20;
-    }
-
-
-    strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
 
     if(process->needTime<=0||process->needTime>20){
         QMessageBox::critical(this,"格式错误",tr("输入值必须在[0,20]内"));
@@ -63,13 +52,6 @@ void processDialog::on_pushButton_ok_clicked()
     w->processTab->processQueue.push_back(process);
     w->processTab->readyQueue.push_back(process);
 
-    if(process->needTime>10){
-        w->memoryTab->requestMemery(5,QString::fromStdString(process->name));
-    }else{
-        int pageFrame = rand()%4+1;
-        qDebug()<<"what1";
-        w->memoryTab->requestMemery(pageFrame,name);qDebug()<<"what2";
-    }
 
     //更新表格
     w->processTab->showProcess();

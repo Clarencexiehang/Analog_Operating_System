@@ -5,6 +5,11 @@
 #include "string"
 using namespace std;
 
+#include "iostream"
+#include "cstring"
+#include "algorithm"
+#include "QString"
+
 
 class PCB
 {
@@ -18,10 +23,11 @@ public:
     string equip;           /*使用设备*/
     int visit_pages[20];    /*进程访问的页面顺序*/
     int visit_page_index;   /*进程将要访问的页面下标*/
-    string behaviour;
+    string behaviour;       /*进程的行为*/
+    int disk_track[20];     /*进程访问磁盘磁道号的顺序*/
 
 public:
-    PCB();
+    PCB(string name);
 
 
     void Random_Create_PCB();
