@@ -14,7 +14,7 @@
 #include "QMessageBox"
 #include "QStringListModel"
 #include "QTimer"
-#include <QElapsedTimer>4
+#include <QElapsedTimer>
 
 namespace Ui {
 class ProcessTab;
@@ -54,6 +54,9 @@ public:
     bool V(int &semaphore);
     bool Process_Behaviour(string behaviour,PCB* runOne);
     void Create_Process_For_Synchronization();
+
+    void Create_Disk_Track();                           //磁盘调度访问磁道号顺序
+
 
 
 private slots:

@@ -145,33 +145,20 @@ void ProcessTab::Random_Create_PCB(){
 }
 
 void ProcessTab::insertReadyQueue(PCB* process,string name){
-    process = new PCB;
+    process = new PCB(name);
 
-    process->name = name;
-    process->needTime = rand()%19+1;
-    process->prio = 20 - process->needTime;
-    process->round = 2;
-    process->cpuTime = 0;
-    strcpy(process->state, "就绪");    //默认创建的新进程是就绪状态
-    process->equip = "无";
-    process->visit_page_index = 0;
-    process->behaviour = "null";
-
-    for(int i=0;i<process->needTime;i++){
-        process->visit_pages[i] = rand()%20;
-    }
     //放入就绪队列
     processQueue.push_back(process);
     readyQueue.push_back(process);
 
-    //分配内存
-    QString p = QString::fromStdString(process->name);
-    if(process->needTime>10){
-        w->memoryTab->requestMemery(5,QString::fromStdString(process->name));
-    }else{
-        int pageFrame = rand()%4+1;
-        w->memoryTab->requestMemery(pageFrame,QString::fromStdString(process->name));
-    }
+//    //分配内存
+//    QString p = QString::fromStdString(process->name);
+//    if(process->needTime>10){
+//        w->memoryTab->requestMemery(5,QString::fromStdString(process->name));
+//    }else{
+//        int pageFrame = rand()%4+1;
+//        w->memoryTab->requestMemery(pageFrame,QString::fromStdString(process->name));
+//    }
 }
 
 
@@ -258,7 +245,22 @@ h:
         this->showQueue();
         this->showVisitPages(runOne);
 
+        //判断进程是否有事件，进行PV操作
+        bool flag;
+        if(runOne->behaviour == "键盘输入" && !isUsed1){
+            isUsed1 = true;
+            flag = this->Process_Behaviour("键盘输入",runOne);
+            if(flag){
+                goto h;
+            }
 
+        }else if(runOne->behaviour == "获取键值" && !isUsed2){
+            isUsed2 = true;
+            flag = this->Process_Behaviour("获取键值",runOne);
+            if(flag){
+                goto h;
+            };
+        }
 
         while(runOne->needTime>0){
 
@@ -289,6 +291,14 @@ h:
         ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
         ui->textBrowser->moveCursor(QTextCursor::End);
         ui->textBrowser->append(QString(""));
+
+        if(runOne->behaviour == "键盘输入"){
+            V(mutex);
+            flag = V(semaphore_full);
+        }else if(runOne->behaviour == "获取键值"){
+            V(this->mutex);
+            V(semaphore_keyboard);
+        }
     }
 }
 
@@ -300,13 +310,30 @@ bool ProcessTab::cmp_needtime(PCB *a, PCB *b){
 }
 
 void ProcessTab::SJF(){
-    while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
+h:    while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
         sort(readyQueue.begin(),readyQueue.end(),ProcessTab::cmp_needtime);  //就绪队列排序
         PCB *runOne = readyQueue[0];
         readyQueue.erase(readyQueue.begin());
         runningQueue.push_back(runOne);
         this->showQueue();
         this->showVisitPages(runOne);
+
+        //判断进程是否有事件，进行PV操作
+        bool flag;
+        if(runOne->behaviour == "键盘输入" && !isUsed1){
+            isUsed1 = true;
+            flag = this->Process_Behaviour("键盘输入",runOne);
+            if(flag){
+                goto h;
+            }
+
+        }else if(runOne->behaviour == "获取键值" && !isUsed2){
+            isUsed2 = true;
+            flag = this->Process_Behaviour("获取键值",runOne);
+            if(flag){
+                goto h;
+            };
+        }
 
         while(runOne->needTime>0){
             runOne->needTime--;
@@ -335,6 +362,14 @@ void ProcessTab::SJF(){
         ui->textBrowser->insertPlainText("进程 "+QString::fromStdString(runOne->name)+" 执行完毕！！！");
         ui->textBrowser->moveCursor(QTextCursor::End);
         ui->textBrowser->append(QString(""));
+
+        if(runOne->behaviour == "键盘输入"){
+            V(mutex);
+            flag = V(semaphore_full);
+        }else if(runOne->behaviour == "获取键值"){
+            V(this->mutex);
+            V(semaphore_keyboard);
+        }
     }
 }
 
@@ -508,46 +543,33 @@ bool ProcessTab::Process_Behaviour(string behaviour,PCB* runOne){
 
 //创建进程模拟进程同步
 void ProcessTab::Create_Process_For_Synchronization(){
-    PCB* p2 = new PCB;
-    p2->name = "获取键值";
-    p2->needTime = rand()%19+1;
-    p2->prio = 20 - p2->needTime;
-    p2->round = 2;
-    p2->cpuTime = 0;
-    strcpy(p2->state, "就绪");    //默认创建的新进程是就绪状态
-    p2->equip = "键盘";
-    p2->visit_page_index = 0;
+    PCB* p2 = new PCB("获取键值");
     p2->behaviour = "获取键值";
-
-    for(int i=0;i<p2->needTime;i++){
-        p2->visit_pages[i] = rand()%20;
-    }
     //放入就绪队列
     processQueue.push_back(p2);
     readyQueue.push_back(p2);
 
-    //分配内存
-    w->memoryTab->requestMemery(5,QString::fromStdString(p2->name));
 
-    PCB* p1 = new PCB;
-    p1->name = "键盘输入";
-    p1->needTime = rand()%19+1;
-    p1->prio = 20 - p1->needTime;
-    p1->round = 2;
-    p1->cpuTime = 0;
-    strcpy(p1->state, "就绪");    //默认创建的新进程是就绪状态
-    p1->equip = "键盘";
-    p1->visit_page_index = 0;
+
+    PCB* p1 = new PCB("键盘输入");
     p1->behaviour = "键盘输入";
+    //放入就绪队列
+    processQueue.push_back(p1);
+    readyQueue.push_back(p1);
+}
 
-    for(int i=0;i<p1->needTime;i++){
-        p1->visit_pages[i] = rand()%20;
-    }
+
+
+/**************************************** 磁盘调度访问磁道号顺序 *************************************************/
+void ProcessTab::Create_Disk_Track(){
+    PCB* p1 = new PCB("访问磁盘");
+    p1->equip = "磁盘";
     //放入就绪队列
     processQueue.push_back(p1);
     readyQueue.push_back(p1);
 
-    //分配内存
-    w->memoryTab->requestMemery(5,QString::fromStdString(p1->name));
-
+    for(int i=0;i<p1->needTime;i++){
+        p1->visit_pages[i] = rand()%20;
+        p1->disk_track[i]=rand()%20;
+    }
 }
