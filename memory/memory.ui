@@ -35,11 +35,50 @@
   <widget class="QTableWidget" name="memeryTable">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>100</x>
      <y>30</y>
-     <width>691</width>
+     <width>601</width>
      <height>211</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="check1">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>60</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>RLU</string>
+   </property>
+  </widget>
+  <widget class="QRadioButton" name="check2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>100</y>
+     <width>120</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>FIFO</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>69</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>置换算法</string>
    </property>
   </widget>
  </widget>

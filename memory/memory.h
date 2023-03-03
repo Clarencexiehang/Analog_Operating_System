@@ -43,6 +43,8 @@ public:
     bool requestMemery(int pageFrame,QString pid);
     void replacePageByLRU(QString pid,int page);
     void freeMemery(QString pid);
+    void replacePage(QString pid,int page);
+    void replacePageByFIFO(QString pid,int page);
     ~Memory();
 
 private:

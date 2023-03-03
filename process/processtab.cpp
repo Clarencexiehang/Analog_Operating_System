@@ -227,7 +227,6 @@ void ProcessTab::on_start_clicked()
         return ;
     }
 
-
 }
 
 
@@ -268,7 +267,7 @@ h:
 
             //更新进程信息，更新表格状态
             this->updateTableWidget(runOne,"运行");
-            w->memoryTab->replacePageByLRU(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
+            w->memoryTab->replacePage(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
 
 
             //更新输出日志
@@ -315,7 +314,7 @@ void ProcessTab::SJF(){
 
             //更新进程信息，更新表格状态
             this->updateTableWidget(runOne,"运行");
-            w->memoryTab->replacePageByLRU(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
+            w->memoryTab->replacePage(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
 
 
             //更新输出日志
@@ -405,7 +404,7 @@ h:  while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
             runOne->cpuTime += runOne->round;
 
             this->updateTableWidget(runOne,"运行");
-            w->memoryTab->replacePageByLRU(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
+            w->memoryTab->replacePage(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
             this->showQueue();
 
             //更新输出日志

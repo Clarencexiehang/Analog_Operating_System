@@ -317,6 +317,77 @@ void Memory::freeMemery(QString pid){
     }
 }
 
+//先进先出置换算法
+void Memory::replacePageByFIFO(QString pid,int page){
+
+    struct usedMemeryBlock * block;
+    block = this->usedMemeryList;
+    while(block != nullptr && block->pid != pid){
+        block = block->nextBlock;
+    }
+    if(block == nullptr) return;
+    block->requestPageList[block->requestPageCount] = page;
+    block->requestPageCount++;
+    int i,j;
+
+    for(int k=0;k<block->memeryBlockSize;k++){
+        //进入页在内存中
+
+        i = block->pageList[k][1]/20;
+        j = block->pageList[k][1]%20;
+        if(block->pageList[k][0] == page){
+            this->dye(block,2);
+            ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(16,126,239)));
+            return;
+        }
+    }
+    //内存空间未满
+    if(block->blockSize<block->memeryBlockSize){
+        block->blockSize++;
+        block->pageList[block->blockSize-1][0] = page;
+        i = block->pageList[block->blockSize-1][1]/20;
+        j = block->pageList[block->blockSize-1][1]%20;
+        this->dye(block,2);
+        ui->memeryTable->item(i,j)->setBackground(QBrush(QColor(16,126,239)));
+        QString text;
+//        text = "" + page;
+        ui->memeryTable->item(i,j)->setText(QString::number(page));
+        w->diskTab->replacePage(pid,page);
+    }
+    else{
+        int k;
+        int minIndex = 101;
+        for(k = 0;k < block->memeryBlockSize;k++){
+            int z;
+            int pageIndex = 100;
+            for(z=0;z<block->requestPageCount-1;z++){
+                if(block->requestPageList[z] == block->pageList[k][0]){
+                    pageIndex = z;
+                }
+
+            }
+            if(minIndex > pageIndex){
+                minIndex = pageIndex;
+            }
+        }
+        //取出需要置换的位置
+        int index;
+        for(index=0;index<block->memeryBlockSize;index++){
+            if(block->pageList[index][0] == block->requestPageList[minIndex]){
+                break;
+            }
+        }
+        w->diskTab->replacePage(pid,page);
+        int xindex = block->pageList[index][1]/20;
+        int yindex = block->pageList[index][1]%20;
+        this->dye(block,2);
+        block->pageList[index][0] = page;
+        ui->memeryTable->item(xindex,yindex)->setBackground(QBrush(QColor(16,126,239)));
+        QString text;
+//        text = "" + page;
+        ui->memeryTable->item(xindex,yindex)->setText(QString::number(page));
+    }
+}
 //页面置换算法 最久未使用算法
 void Memory::replacePageByLRU(QString pid,int page){
     //找到该进程的内存
@@ -402,6 +473,17 @@ void Memory::replacePageByLRU(QString pid,int page){
     }
 }
 
+void Memory::replacePage(QString pid,int page){
+    if (ui->check1->isChecked()) {
+        // timer->start(1000); //启动定时器，运行完一个进程
+        this->replacePageByLRU(pid,page);
+    }else if(ui->check2->isChecked()){
+        this->replacePageByFIFO(pid,page);
+    }else{
+        QMessageBox::warning(this,"错误提示",tr("请选择置换算法算法"));
+        return ;
+    }
+}
 
 void Memory::paintEvent(QPaintEvent *){
     QPainter painter(this); //指定绘图设备
