@@ -17,7 +17,6 @@ PCB::PCB(string name)
 
     for(int i=0;i<this->needTime;i++){
         this->visit_pages[i] = rand()%20;
-        this->disk_track[i]=-1;
     }
 
 

@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
     srand(time(nullptr));
     w->processTab->Random_Create_PCB();
     w->processTab->Create_Process_For_Synchronization();
-    w->processTab->Create_Disk_Track();
     w->processTab->showProcess();
 
     w->show();

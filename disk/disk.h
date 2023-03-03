@@ -2,6 +2,15 @@
 #define DISK_H
 
 #include <QWidget>
+#include <QVector>
+
+#include<queue>
+#include<cmath>
+#include "vector"
+#include"cstring"
+#include "algorithm"
+
+using namespace std;
 
 namespace Ui {
 class Disk;
@@ -26,6 +35,9 @@ public:
     void initvirtualMemory();
     void replacePage(QString pid,int page);
     void freeMemory(QString pid);
+
+    int* disk_sheduling(QVector<int> disk_visit_Queue);
+    void ShowDiskTrack(int track_num);
     ~Disk();
 
 private:

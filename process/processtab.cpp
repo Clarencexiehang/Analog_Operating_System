@@ -442,6 +442,17 @@ h:  while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
             w->memoryTab->replacePage(QString::fromStdString(runOne->name),runOne->visit_pages[runOne->visit_page_index]);
             this->showQueue();
 
+
+            //判断是否需要访问磁盘
+            if(runOne->behaviour == "file"){
+                w->diskTab->ShowDiskTrack(runOne->track[runOne->visit_page_index]);
+                ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
+                                                  +", 访问磁道号:"+QString::number(runOne->track[runOne->visit_page_index]));
+                ui->textBrowser->moveCursor(QTextCursor::End);
+                ui->textBrowser->append(QString(""));
+                QCoreApplication::processEvents();
+            }
+
             //更新输出日志
             ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
                                               +", 优先级:"+QString::number(runOne->prio)+",  已运行时间:"+ QString::number(runOne->cpuTime));
@@ -560,16 +571,22 @@ void ProcessTab::Create_Process_For_Synchronization(){
 
 
 
-/**************************************** 磁盘调度访问磁道号顺序 *************************************************/
-void ProcessTab::Create_Disk_Track(){
-    PCB* p1 = new PCB("访问磁盘");
-    p1->equip = "磁盘";
-    //放入就绪队列
-    processQueue.push_back(p1);
-    readyQueue.push_back(p1);
+/**************************************** 文件系统和磁盘调度访问磁道号顺序 *************************************************/
+void ProcessTab::Create_Process_For_File(QVector<int> disk_visit_Queue){
+    PCB* file = new PCB("file");
 
-    for(int i=0;i<p1->needTime;i++){
-        p1->visit_pages[i] = rand()%20;
-        p1->disk_track[i]=rand()%20;
+    file->needTime = disk_visit_Queue.size();
+
+    file->track = w->diskTab->disk_sheduling(disk_visit_Queue);
+    for(int i=0;i<file->needTime;i++){
+        file->visit_pages[i] = rand()%20;
     }
+    file->behaviour = "file";
+
+
+    //放入就绪队列
+    processQueue.push_back(file);
+    readyQueue.push_back(file);
 }
+
+

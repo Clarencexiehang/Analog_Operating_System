@@ -24,7 +24,7 @@ public:
     int visit_pages[20];    /*进程访问的页面顺序*/
     int visit_page_index;   /*进程将要访问的页面下标*/
     string behaviour;       /*进程的行为*/
-    int disk_track[20];     /*进程访问磁盘磁道号的顺序*/
+    int *track;
 
 public:
     PCB(string name);
