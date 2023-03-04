@@ -1854,6 +1854,7 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         fontt.setBold(true);//设置为粗体
         fontt.setPointSize(8);//字体大小
         h11->setTextColor(Qt::red);//字体颜色
+        +-
         h11->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(0,h11);
 
@@ -1978,6 +1979,18 @@ int * Disk::disk_sheduling(QVector<int> seq){
 }
 
 void Disk::ShowDiskTrack(int track_num){
+    //恢复
+    for(int i=0;i<diskBlock.size();i++){
+        int rr=i/(ui->block_tab->columnCount());
+        int cc=i%(ui->block_tab->columnCount());
+        QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
+        tt->setBackground(QBrush(Qt::gray));
+        if((diskBlock[i])->fileId!=-1){
+            //修改颜色
+            tt->setBackground(QBrush(Qt::red));
+            tt->setText(QString::number(diskBlock[i]->fileId));
+        }
+    }
     //初始磁盘块表格
     for(int j=0;j<20;j++){
         QTableWidgetItem *t=new QTableWidgetItem;
