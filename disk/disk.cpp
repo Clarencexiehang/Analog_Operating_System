@@ -1,6 +1,8 @@
 #include "disk.h"
 #include "ui_disk.h"
+#include"mainwindow.h"
 
+extern MainWindow *w;
 
 int color1[10][3] = {
     {33,222,28},
@@ -1410,7 +1412,7 @@ void Disk::geentFileSeekWind(QString filename,QString policy)
     }
 
     //____________________
-//    w->processTab->Create_Process_For_File(cyIDorder);
+    w->processTab->Create_Process_For_File(cyIDorder);
 }
 
 void Disk::releaseSpace(QString filename, QString policy)
@@ -1897,7 +1899,13 @@ int * Disk::disk_sheduling(QVector<int> seq){
 }
 
 void Disk::ShowDiskTrack(int track_num){
-
+    //初始磁盘块表格
+    for(int j=0;j<20;j++){
+        QTableWidgetItem *t=new QTableWidgetItem;
+        //t->setText(QString::number(-1));
+        t->setBackground(QBrush(QColor(color1[2][0],color1[2][1],color1[2][2])));
+        ui->block_tab->setItem(track_num,j,t);
+    }
 }
 
 

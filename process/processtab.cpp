@@ -446,6 +446,7 @@ h:  while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
 
             //判断是否需要访问磁盘
             if(runOne->behaviour == "file"){
+                qDebug()<<"磁道号《《《《《《《《《《《《《《《《"<<runOne->track[runOne->visit_page_index];
                 w->diskTab->ShowDiskTrack(runOne->track[runOne->visit_page_index]);
                 ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
                                                   +", 访问磁道号:"+QString::number(runOne->track[runOne->visit_page_index]));
@@ -575,7 +576,7 @@ void ProcessTab::Create_Process_For_Synchronization(){
 /**************************************** 文件系统和磁盘调度访问磁道号顺序 *************************************************/
 void ProcessTab::Create_Process_For_File(QVector<int> disk_visit_Queue){
     PCB* file = new PCB("file");
-
+    qDebug()<<"size!!!!!!!!"<<disk_visit_Queue.size();
     file->needTime = disk_visit_Queue.size();
 
     file->track = w->diskTab->disk_sheduling(disk_visit_Queue);
@@ -588,6 +589,7 @@ void ProcessTab::Create_Process_For_File(QVector<int> disk_visit_Queue){
     //放入就绪队列
     processQueue.push_back(file);
     readyQueue.push_back(file);
+    w->processTab->showProcess();
 }
 
 
