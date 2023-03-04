@@ -22,11 +22,8 @@ void FileContext::setFileName(QString filename)
     this->filename=filename;
 
     QVector<myFilepro*> *filepros=w->fileTab->getFileContext();
-    qDebug()<<"查找文件 ："<<this->filename;
     for (int i=0;i<filepros->size();i++) {
-        qDebug()<<"遍历文件 ："<<((*filepros)[i])->name;
         if(((*filepros)[i])->name==this->filename){
-            qDebug()<<"找到文件 ："<<((*filepros)[i])->name;
             //改变文件内容
             ui->context->setText(((*filepros)[i])->context);
             break;
