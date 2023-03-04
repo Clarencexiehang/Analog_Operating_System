@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<<<<<<< HEAD
-=======
-<!-- Written by QtCreator 4.8.2, 2023-02-14T14:55:10. -->
->>>>>>> 5448492952d082040c1698a936dedf8a650fa4f3
+<!-- Written by QtCreator 9.0.0, 2023-03-04T20:52:02. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -120,6 +117,7 @@
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.MakeStep</value>
+      <value type="qlonglong" key="Qt4ProjectManager.MakeStep.JobCount">7</value>
       <value type="QString" key="Qt4ProjectManager.MakeStep.MakeArguments">clean</value>
      </valuemap>
      <value type="qlonglong" key="ProjectExplorer.BuildStepList.StepsCount">1</value>
