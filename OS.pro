@@ -26,15 +26,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    disk/disk.cpp \
     equipment/equipment.cpp \
-    file/file.cpp \
     memory/memory.cpp \
     process/pcb.cpp \
     process/processdialog.cpp \
     process/processtab.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    file/file.cpp \
+    file/filecontext.cpp \
+    file/filecreate.cpp \
+    file/fileproperty.cpp \
+    file/foldercreate.cpp \
+    file/myfilepro.cpp \
+    file/spaceexband.cpp \
+    disk/confilespacedetail.cpp \
+    disk/disk.cpp \
+    disk/fatfilespacedetail.cpp \
+    disk/freeblocktable.cpp \
+    disk/indexfilespacedetail.cpp \
+    disk/showfileseekoder.cpp
 
 
 HEADERS += \
@@ -45,7 +56,20 @@ HEADERS += \
     process/pcb.h \
     process/processdialog.h \
     process/processtab.h \
-    mainwindow.h
+    mainwindow.h \
+    file/file.h \
+    file/filecontext.h \
+    file/filecreate.h \
+    file/fileproperty.h \
+    file/foldercreate.h \
+    file/myfilepro.h \
+    file/spaceexband.h \
+    disk/confilespacedetail.h \
+    disk/disk.h \
+    disk/fatfilespacedetail.h \
+    disk/freeblocktable.h \
+    disk/indexfilespacedetail.h \
+    disk/showfileseekoder.h
 
 
 
@@ -56,7 +80,19 @@ FORMS += \
     memory/memory.ui \
     process/processdialog.ui \
     process/processtab.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    file/file.ui \
+    file/filecontext.ui \
+    file/filecreate.ui \
+    file/fileproperty.ui \
+    file/foldercreate.ui \
+    file/spaceexband.ui \
+    disk/confilespacedetail.ui \
+    disk/disk.ui \
+    disk/fatfilespacedetail.ui \
+    disk/freeblocktable.ui \
+    disk/indexfilespacedetail.ui \
+    disk/showfileseekoder.ui
 
 
 

@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Disk</class>
- <widget class="QWidget" name="Disk">
+ <class>fatFileSpaceDetail</class>
+ <widget class="QWidget" name="fatFileSpaceDetail">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>710</width>
-    <height>240</height>
+    <width>670</width>
+    <height>673</height>
    </rect>
-  </property>
-  <property name="minimumSize">
-   <size>
-    <width>710</width>
-    <height>240</height>
-   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
@@ -22,46 +16,46 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>10</y>
-     <width>72</width>
-     <height>15</height>
+     <x>10</x>
+     <y>20</y>
+     <width>121</width>
+     <height>18</height>
     </rect>
    </property>
    <property name="text">
-    <string>磁盘状态</string>
+    <string>目录结构 :</string>
    </property>
   </widget>
-  <widget class="QTableWidget" name="virtualMemory">
+  <widget class="QTableWidget" name="fat_dir_tab">
    <property name="geometry">
     <rect>
-     <x>465</x>
-     <y>31</y>
-     <width>241</width>
-     <height>211</height>
+     <x>10</x>
+     <y>50</y>
+     <width>651</width>
+     <height>101</height>
     </rect>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>570</x>
-     <y>10</y>
-     <width>69</width>
+     <x>10</x>
+     <y>168</y>
+     <width>131</width>
      <height>20</height>
     </rect>
    </property>
    <property name="text">
-    <string>虚拟内存</string>
+    <string>FAT 表 ：</string>
    </property>
   </widget>
-  <widget class="QTableWidget" name="block_tab">
+  <widget class="QTableWidget" name="fat_tab">
    <property name="geometry">
     <rect>
-     <x>0</x>
-     <y>30</y>
-     <width>451</width>
-     <height>221</height>
+     <x>10</x>
+     <y>190</y>
+     <width>651</width>
+     <height>471</height>
     </rect>
    </property>
   </widget>

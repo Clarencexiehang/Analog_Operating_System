@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>260</height>
+    <height>570</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -30,6 +30,72 @@
    </property>
    <property name="text">
     <string>文件管理</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="mag_createfile">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>20</y>
+     <width>181</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 85, 255);</string>
+   </property>
+   <property name="text">
+    <string>创建文件</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="mag_createfoler">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>70</y>
+     <width>181</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 85, 255);</string>
+   </property>
+   <property name="text">
+    <string>创建文件夹</string>
+   </property>
+  </widget>
+  <widget class="QTreeWidget" name="filetree">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>50</y>
+     <width>451</width>
+     <height>471</height>
+    </rect>
+   </property>
+   <property name="contextMenuPolicy">
+    <enum>Qt::CustomContextMenu</enum>
+   </property>
+   <column>
+    <property name="text">
+     <string notr="true">1</string>
+    </property>
+   </column>
+  </widget>
+  <widget class="QPushButton" name="del_file">
+   <property name="geometry">
+    <rect>
+     <x>510</x>
+     <y>120</y>
+     <width>181</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 85, 255);</string>
+   </property>
+   <property name="text">
+    <string>删除文件</string>
    </property>
   </widget>
  </widget>

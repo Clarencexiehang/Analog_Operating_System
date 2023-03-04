@@ -14,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     fileTab = new File(this);
     equipmentTab = new Equipment(this);
     diskTab = new Disk(this);
+
+
+    fileTab->disk=diskTab;
+
     ui->processArea->setWidget(processTab);
     ui->memoryArea->setWidget(memoryTab);
     ui->fileArea->setWidget(fileTab);
