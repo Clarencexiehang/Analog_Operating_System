@@ -139,15 +139,39 @@ public:
 
     //磁盘分配文件内存
     void  distrcFileSpace(int id,QString name,int size,QString);
+
+    //************************* 新加
+    //连续分配
+    void conFileDistrc(int id,QString name,int size,QString);
+    //显示链接
+    void fatFileDistrc(int id,QString name,int size,QString);
+    //索引分配
+    void indexFileDistrc(int id,QString name,int size,QString);
+    //************************* 新加
+
     //获取文件磁盘块序列
 
     //生成磁盘调度窗口
     void geentFileSeekWind(QString filename,QString policy);
     //释放磁盘空间
     void releaseSpace(QString filename,QString policy);
-
     //在空闲表中分配磁盘块 nextId
     void disrtSpaceInFreeTable(int nextId);
+
+    //************************* 新加
+    //______________________________
+    //修改磁盘块颜色
+    void releaseTabBlockColor(int j);
+    //初始化空闲空间表数据
+    void flushFreeBlockTab();
+    //显示磁盘块信息
+    void showBlockInfo();
+    //显示空闲空间数据
+    void showFreeData();
+    //************************* 新加
+
+
+
 
     QString diskID;
 

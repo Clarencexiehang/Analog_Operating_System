@@ -183,27 +183,32 @@ void File::on_del_file_clicked()
 void File::on_filetree_doubleClicked(const QModelIndex &index)
 {
     pCurrentItem=ui->filetree->currentItem();
-    qDebug()<<"双击 "<<pCurrentItem->text(0);
     //判断双击的是否为文件
     bool isFile=false;
-
-    contextWind=new FileContext;
-    contextWind->setFileName(pCurrentItem->text(0));
-    contextWind->show();
-
-    //获取当前目录
-    pCurrentItem=ui->filetree->currentItem();
-    qDebug()<<"打开文件 ： "<<pCurrentItem->text(0);
-    //在文件记录中根据文件名找文件分配策略
-    QString policy;
-    QVector<myFilepro*>::iterator iter;
-    for (iter=filepros->begin();iter!=filepros->end();iter++){
-        if((*iter)->name==pCurrentItem->text(0)){
-               policy=(*iter)->policy;
-               break;
+    for (int i=0;i<(this->disk->fpol).size();i++) {
+        if((this->disk->fpol)[i].filename==pCurrentItem->text(0)){
+            isFile=true;
         }
     }
-    this->disk->geentFileSeekWind(pCurrentItem->text(0),policy);
+    if(isFile){
+        contextWind=new FileContext;
+        contextWind->setFileName(pCurrentItem->text(0));
+        contextWind->show();
+
+        //获取当前目录
+        pCurrentItem=ui->filetree->currentItem();
+        qDebug()<<"打开文件 ： "<<pCurrentItem->text(0);
+        //在文件记录中根据文件名找文件分配策略
+        QString policy;
+        QVector<myFilepro*>::iterator iter;
+        for (iter=filepros->begin();iter!=filepros->end();iter++){
+            if((*iter)->name==pCurrentItem->text(0)){
+                   policy=(*iter)->policy;
+                   break;
+            }
+        }
+        this->disk->geentFileSeekWind(pCurrentItem->text(0),policy);
+    }
 }
 
 QVector<myFilepro *> *File::getFileContext()
