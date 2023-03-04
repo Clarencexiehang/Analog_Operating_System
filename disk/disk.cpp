@@ -1825,82 +1825,14 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
 
 
 /*****************************************************  磁盘调度  **************************************************************/
-int * Disk::disk_sheduling(QVector<int> seq){
-    int n = seq.size();
-    int start = 1;
-    int xb;
-    const int INF = 0x3f3f3f3f;
-    double avgfind;
-    typedef pair<int, int> p;
-    vector<p> v;
+//int* Disk::disk_sheduling(QVector<int> seq){
 
-    sort(seq.begin(), seq.end());
-
-   if(seq[0] > start) {
-       v.push_back({seq[0], abs(seq[0] - start)});
-       avgfind += abs(seq[0] - start);
-       start = seq[0];
-
-       xb = 1;
-
-       for(int i = xb; i < seq.size(); i ++) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-   }
-   else if(seq[n - 1] < start) {
-       v.push_back({seq[n - 1], abs(start - seq[n - 1])});
-       avgfind += abs(start - seq[n - 1]);
-       xb = n - 2;
-       start = seq[n - 1];
-
-       for(int i = xb; i >= 0; i --) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-
-   } else {
-       for(int i = 0; i < seq.size() - 1; i ++) {
-       if(seq[i + 1] > start && seq[i] < start) {
-           v.push_back({seq[i + 1], abs(seq[i + 1] - start)});
-           avgfind += abs(seq[i + 1] - start);
-           start = seq[i + 1];
-           xb = (i + 2 > seq.size()) ? seq.size() : (i + 2);
-           break;
-       }
-   }
-        for(int i = xb; i < seq.size(); i ++) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-       for(int i = xb - 2; i >= 0; i --) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-   }
-
-//       cout << "磁道号\t移动距离" << "\n";
-//       for(int i = 0; i < v.size(); i ++) {
-//           cout << v[i].first << "\t" << v[i].second << "\n";
-//       }
-//       cout << "总长度：" <<endl;
-//       printf("%.2lf\n", avgfind);
-//       cout << "平均寻道长度：" <<endl;
-//       printf("%.2lf", avgfind / temp);
-   int track[100];
-   for(int i = 0; i < v.size(); i ++){
-       track[i] = v[i].first;
-   }
-   return track;
-}
+//   return track;
+//}
 
 void Disk::ShowDiskTrack(int track_num){
     //初始磁盘块表格
-    for(int j=0;j<20;j++){
+    for(int j=0;j<15;j++){
         QTableWidgetItem *t=new QTableWidgetItem;
         //t->setText(QString::number(-1));
         t->setBackground(QBrush(QColor(color1[2][0],color1[2][1],color1[2][2])));

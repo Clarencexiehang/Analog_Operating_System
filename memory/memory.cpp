@@ -95,7 +95,11 @@ void Memory::initMemery(){
         this->isUsed[i] = 0;
     }
     this->usedMemeryList = nullptr;
+
+    ui->check1->setChecked(true);
 }
+
+
 void Memory::dye(struct usedMemeryBlock * block,int flag){
     int j;
     int i;

@@ -444,17 +444,6 @@ h:  while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
             this->showQueue();
 
 
-            //判断是否需要访问磁盘
-            if(runOne->behaviour == "file"){
-                qDebug()<<"磁道号《《《《《《《《《《《《《《《《"<<runOne->track[runOne->visit_page_index];
-                w->diskTab->ShowDiskTrack(runOne->track[runOne->visit_page_index]);
-                ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
-                                                  +", 访问磁道号:"+QString::number(runOne->track[runOne->visit_page_index]));
-                ui->textBrowser->moveCursor(QTextCursor::End);
-                ui->textBrowser->append(QString(""));
-                QCoreApplication::processEvents();
-            }
-
             //更新输出日志
             ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(runOne->name)+", 访问页面:"+QString::number(runOne->visit_pages[runOne->visit_page_index++])
                                               +", 优先级:"+QString::number(runOne->prio)+",  已运行时间:"+ QString::number(runOne->cpuTime));
@@ -574,22 +563,87 @@ void ProcessTab::Create_Process_For_Synchronization(){
 
 
 /**************************************** 文件系统和磁盘调度访问磁道号顺序 *************************************************/
-void ProcessTab::Create_Process_For_File(QVector<int> disk_visit_Queue){
+void ProcessTab::Create_Process_For_File(QVector<int> seq){
     PCB* file = new PCB("file");
-    qDebug()<<"size!!!!!!!!"<<disk_visit_Queue.size();
-    file->needTime = disk_visit_Queue.size();
-
-    file->track = w->diskTab->disk_sheduling(disk_visit_Queue);
-    for(int i=0;i<file->needTime;i++){
-        file->visit_pages[i] = rand()%20;
+    qDebug()<<"size!!!!!!!!"<<seq.size();
+    for(int i = 0; i < seq.size(); i ++){
+       qDebug()<<"seq:"<<seq[i];
     }
-    file->behaviour = "file";
 
-
+    file->needTime = seq.size();
+    strcpy( file->state, "运行");
+    //file->track = w->diskTab->disk_sheduling(seq); qDebug()<<"fksafsdaf"<<file->track[0];
     //放入就绪队列
+
+    runningQueue.push_back(file);
     processQueue.push_back(file);
-    readyQueue.push_back(file);
-    w->processTab->showProcess();
+    this->showProcess();
+    this->showQueue();
+
+    //磁盘调度
+    int num = seq.size();
+    int start_index = 1;
+    int total_mov_distance = 0;
+    sort(seq.begin(),seq.end());
+
+    //找到起始位置位于访问序列的相对位置
+    if(start_index < seq[0]){
+        for (int i=0;i<seq.size();i++) {
+            file->track[i] = seq[i];
+        }
+        total_mov_distance = seq[num-1]-seq[0];
+    }else if(start_index > seq[0]){
+        for (int i=seq.size()-1;i>= 0;i--) {
+            file->track[i] = seq[i];
+        }
+        total_mov_distance = seq[num-1]-seq[0];
+    }else{
+        //找到磁头在哪个具体位置
+        for (int i=0;i<seq.size();i++) {
+            int index = 0;
+            if(seq[i]<start_index && seq[i+1]>=start_index){
+                //先向右扫描
+                for (int j=i;j<seq.size();j++) {
+                    file->track[index++] = seq[j];
+                }
+                //然后向左扫描
+                for (int j=0;j<i;j++) {
+                    file->track[index++] = seq[j];
+                }
+            }
+        }
+        total_mov_distance = seq[num-1]-seq[0]+seq[num-1]-start_index;
+    }
+
+
+
+
+    for (int i=0;i<seq.size();i++) {
+        qDebug()<<"磁道号《《《《《《"<<file->track[i];
+        w->diskTab->ShowDiskTrack(file->track[i]);
+        ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(file->name)+", 访问磁道号:"+QString::number(file->track[i]));
+
+        ui->textBrowser->moveCursor(QTextCursor::End);
+        ui->textBrowser->append(QString(""));
+        QCoreApplication::processEvents();
+
+        file->needTime--;
+        this->updateTableWidget(file,"运行");
+        //延时1s
+        t1.start();
+        while(t1.elapsed()<1000);
+    }
+
+    //访问磁道结束
+    this->updateTableWidget(file,"完成");
+    runningQueue.pop_back();
+    ui->processtable->removeRow(ui->processtable->rowCount()-1);
+    processQueue.pop_back();
+    this->showQueue();
+    this->showProcess();
+    ui->textBrowser->insertPlainText("总长度 "+QString::number(total_mov_distance)+" 平均寻道长度:"+QString::number(total_mov_distance / seq.size()));
+    ui->textBrowser->moveCursor(QTextCursor::End);
+    ui->textBrowser->append(QString(""));
 }
 
 

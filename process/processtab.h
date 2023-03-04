@@ -17,6 +17,12 @@
 #include <QElapsedTimer>
 #include <QVector>
 
+#include<queue>
+#include<cmath>
+#include "QTabWidget"
+#include "vector"
+#include"cstring"
+#include "algorithm"
 namespace Ui {
 class ProcessTab;
 }
