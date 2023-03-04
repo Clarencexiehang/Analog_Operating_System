@@ -565,14 +565,12 @@ void ProcessTab::Create_Process_For_Synchronization(){
 /**************************************** 文件系统和磁盘调度访问磁道号顺序 *************************************************/
 void ProcessTab::Create_Process_For_File(QVector<int> seq){
     PCB* file = new PCB("file");
-    qDebug()<<"size!!!!!!!!"<<seq.size();
     for(int i = 0; i < seq.size(); i ++){
        qDebug()<<"seq:"<<seq[i];
     }
 
     file->needTime = seq.size();
     strcpy( file->state, "运行");
-    //file->track = w->diskTab->disk_sheduling(seq); qDebug()<<"fksafsdaf"<<file->track[0];
     //放入就绪队列
 
     runningQueue.push_back(file);
@@ -591,23 +589,23 @@ void ProcessTab::Create_Process_For_File(QVector<int> seq){
         for (int i=0;i<seq.size();i++) {
             file->track[i] = seq[i];
         }
-        total_mov_distance = seq[num-1]-seq[0];
-    }else if(start_index > seq[0]){
+        total_mov_distance = seq[num-1]-start_index;
+    }else if(start_index > seq[num-1]){
         for (int i=seq.size()-1;i>= 0;i--) {
             file->track[i] = seq[i];
         }
-        total_mov_distance = seq[num-1]-seq[0];
+        total_mov_distance = start_index-seq[0];
     }else{
         //找到磁头在哪个具体位置
         for (int i=0;i<seq.size();i++) {
             int index = 0;
             if(seq[i]<start_index && seq[i+1]>=start_index){
                 //先向右扫描
-                for (int j=i;j<seq.size();j++) {
+                for (int j=i+1;j<seq.size();j++) {
                     file->track[index++] = seq[j];
                 }
                 //然后向左扫描
-                for (int j=0;j<i;j++) {
+                for (int j=0;j<i+1;j++) {
                     file->track[index++] = seq[j];
                 }
             }
@@ -616,10 +614,7 @@ void ProcessTab::Create_Process_For_File(QVector<int> seq){
     }
 
 
-
-
     for (int i=0;i<seq.size();i++) {
-        qDebug()<<"磁道号《《《《《《"<<file->track[i];
         w->diskTab->ShowDiskTrack(file->track[i]);
         ui->textBrowser->insertPlainText("正在执行进程"+QString::fromStdString(file->name)+", 访问磁道号:"+QString::number(file->track[i]));
 
@@ -629,9 +624,7 @@ void ProcessTab::Create_Process_For_File(QVector<int> seq){
 
         file->needTime--;
         this->updateTableWidget(file,"运行");
-        //延时1s
-        t1.start();
-        while(t1.elapsed()<1000);
+
     }
 
     //访问磁道结束
@@ -641,7 +634,8 @@ void ProcessTab::Create_Process_For_File(QVector<int> seq){
     processQueue.pop_back();
     this->showQueue();
     this->showProcess();
-    ui->textBrowser->insertPlainText("总长度 "+QString::number(total_mov_distance)+" 平均寻道长度:"+QString::number(total_mov_distance / seq.size()));
+    float avg_dis = (float)total_mov_distance / seq.size();
+    ui->textBrowser->insertPlainText("总长度 "+QString::number(total_mov_distance)+" 平均寻道长度:"+QString::number(avg_dis));
     ui->textBrowser->moveCursor(QTextCursor::End);
     ui->textBrowser->append(QString(""));
 }
