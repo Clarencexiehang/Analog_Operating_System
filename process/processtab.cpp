@@ -37,6 +37,7 @@ ProcessTab::ProcessTab(QWidget *parent) :
 //    connect(timer,SIGNAL(timeout()),this,SLOT(on_pause_clicked(bool checked)));
 //    timer->start(100);
 
+    ui->DPTSR->setChecked(true);
 }
 
 ProcessTab::~ProcessTab()
