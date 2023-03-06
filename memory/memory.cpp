@@ -29,6 +29,7 @@ Memory::Memory(QWidget *parent) :
 //    QMessageBox::information(this,"info","信息");
     int columnCount = 20;
     int rowCount = 20;
+    ui->check1->setChecked(true);
     ui->memeryTable->setColumnCount(columnCount);
     ui->memeryTable->setRowCount(rowCount);
 //    ui->processtable->horizontalHeader()->setDefaultAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -95,7 +96,11 @@ void Memory::initMemery(){
         this->isUsed[i] = 0;
     }
     this->usedMemeryList = nullptr;
+
+    ui->check1->setChecked(true);
 }
+
+
 void Memory::dye(struct usedMemeryBlock * block,int flag){
     int j;
     int i;

@@ -497,7 +497,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                     if((diskBlock[i])->fileId==-1){
                         int rr=i/(ui->block_tab->columnCount());
                         int cc=i%(ui->block_tab->columnCount());
-                        qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+                        //qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
                         //设置文件目录的起始索引块位置 并添加到目录中
                         ifd.indexBlockId=i;
                         indexFileDir.append(ifd);
@@ -1046,7 +1046,7 @@ void Disk::fatFileDistrc(int id, QString name, int size, QString policy)
             for(int i=0;i<freeblockTab.size();i++){
                 int startBlockId=freeblockTab[i].blockId;
                 int conNum=freeblockTab[i].con_num;
-                qDebug()<<"找到连续块记录： bid:"<<startBlockId<<" conN:"<<conNum;
+               // qDebug()<<"找到连续块记录： bid:"<<startBlockId<<" conN:"<<conNum;
                 for (int j=startBlockId;j<=startBlockId+conNum-1;j++) {
                     (Fat[j]).value=-1;
                 }
@@ -1191,7 +1191,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
             if((diskBlock[i])->fileId==-1){
                 int rr=i/(ui->block_tab->columnCount());
                 int cc=i%(ui->block_tab->columnCount());
-                qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+                //qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
                 //设置文件目录的起始索引块位置 并添加到目录中
                 ifd.indexBlockId=i;
                 indexFileDir.append(ifd);
@@ -1691,7 +1691,7 @@ void Disk::flushFreeBlockTab()
 void Disk::showBlockInfo()
 {
     for(int i=0;i<diskBlock.size();i++){
-        qDebug()<<" bid: "<<diskBlock[i]->blockId<<" fid:"<<diskBlock[i]->fileId<<" fn:"<<diskBlock[i]->filename;
+       // qDebug()<<" bid: "<<diskBlock[i]->blockId<<" fid:"<<diskBlock[i]->fileId<<" fn:"<<diskBlock[i]->filename;
     }
 }
 
@@ -2014,87 +2014,43 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
 
 
 /*****************************************************  磁盘调度  **************************************************************/
-int * Disk::disk_sheduling(QVector<int> seq){
-    int n = seq.size();
-    int start = 1;
-    int xb;
-    const int INF = 0x3f3f3f3f;
-    double avgfind;
-    typedef pair<int, int> p;
-    vector<p> v;
+//int* Disk::disk_sheduling(QVector<int> seq){
 
-    sort(seq.begin(), seq.end());
-
-   if(seq[0] > start) {
-       v.push_back({seq[0], abs(seq[0] - start)});
-       avgfind += abs(seq[0] - start);
-       start = seq[0];
-
-       xb = 1;
-
-       for(int i = xb; i < seq.size(); i ++) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-   }
-   else if(seq[n - 1] < start) {
-       v.push_back({seq[n - 1], abs(start - seq[n - 1])});
-       avgfind += abs(start - seq[n - 1]);
-       xb = n - 2;
-       start = seq[n - 1];
-
-       for(int i = xb; i >= 0; i --) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-
-   } else {
-       for(int i = 0; i < seq.size() - 1; i ++) {
-       if(seq[i + 1] > start && seq[i] < start) {
-           v.push_back({seq[i + 1], abs(seq[i + 1] - start)});
-           avgfind += abs(seq[i + 1] - start);
-           start = seq[i + 1];
-           xb = (i + 2 > seq.size()) ? seq.size() : (i + 2);
-           break;
-       }
-   }
-        for(int i = xb; i < seq.size(); i ++) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-       for(int i = xb - 2; i >= 0; i --) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-   }
-
-//       cout << "磁道号\t移动距离" << "\n";
-//       for(int i = 0; i < v.size(); i ++) {
-//           cout << v[i].first << "\t" << v[i].second << "\n";
-//       }
-//       cout << "总长度：" <<endl;
-//       printf("%.2lf\n", avgfind);
-//       cout << "平均寻道长度：" <<endl;
-//       printf("%.2lf", avgfind / temp);
-   int track[100];
-   for(int i = 0; i < v.size(); i ++){
-       track[i] = v[i].first;
-   }
-   return track;
-}
+//   return track;
+//}
 
 void Disk::ShowDiskTrack(int track_num){
     //初始磁盘块表格
-    for(int j=0;j<20;j++){
-        QTableWidgetItem *t=new QTableWidgetItem;
+    for(int j=0;j<15;j++){
+        QTableWidgetItem *t=ui->block_tab->item(track_num,j);
         //t->setText(QString::number(-1));
+        //qDebug()<<"找到起始索引块位置 ：";
         t->setBackground(QBrush(QColor(color1[2][0],color1[2][1],color1[2][2])));
-        ui->block_tab->setItem(track_num,j,t);
     }
+ QCoreApplication::processEvents();
+    QElapsedTimer t1;
+    //延时1s
+    t1.start();
+    while(t1.elapsed()<500);
+    int i;
+
+    for(i=0;i < diskBlock.size();i++){
+        int rr=i/(ui->block_tab->columnCount());
+        int cc=i%(ui->block_tab->columnCount());
+        QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
+        tt->setBackground(QBrush(Qt::gray));
+        if((diskBlock[i])->fileId!=-1){
+            //修改颜色
+            tt->setBackground(QBrush(Qt::red));
+            tt->setText(QString::number(diskBlock[i]->fileId));
+//            qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc; qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+        }
+//        qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+        if(i == 119) {
+             break;
+        };
+    }
+     QCoreApplication::processEvents();
 }
 
 
