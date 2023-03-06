@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "process/processtab.h"
 #include "memory/memory.h"
-#include "equipment/equipment.h"
+#include "equipment/Widget.h"
 #include "file/file.h"
 #include "disk/disk.h"
 
@@ -20,7 +20,7 @@ public:
     ProcessTab *processTab;
     Memory *memoryTab;
     File *fileTab;
-    Equipment *equipmentTab;
+    Widget *equipmentTab;
     Disk *diskTab;
 
     explicit MainWindow(QWidget *parent = nullptr);

@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 #include<QMenuBar>
+#include <QQueue>
 namespace Ui {
 class Memory;
 }
@@ -22,7 +23,7 @@ struct usedMemeryBlock{
     int requestPageCount = 0;
     int ranking;
     int pageList[5][2];
-
+    QQueue<int> FIFOPageQueue;
     usedMemeryBlock *nextBlock;
 };
 class Memory : public QWidget

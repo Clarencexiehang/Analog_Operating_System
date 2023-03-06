@@ -16,12 +16,12 @@ freeBlockTable::freeBlockTable(QWidget *parent) :
     QFont fontt=h11->font();//获取原有字体设置
     fontt.setBold(true);//设置为粗体
     fontt.setPointSize(8);//字体大小
-    h11->setTextColor(Qt::red);//字体颜色
+    h11->setBackground(Qt::blue);//字体颜色
+//    h11->setBackground(Qt::blue);
     h11->setFont(fontt);//设置字体
     tbd->setHorizontalHeaderItem(0,h11);
-
     QTableWidgetItem *h22=new QTableWidgetItem("块数");
-    h22->setTextColor(Qt::red);//字体颜色
+    h22->setBackground(Qt::blue);;//字体颜色
     h22->setFont(fontt);//设置字体
     tbd->setHorizontalHeaderItem(1,h22);
 }

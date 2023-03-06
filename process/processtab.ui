@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>620</height>
+    <height>605</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>710</width>
-    <height>615</height>
+    <height>605</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -148,7 +148,7 @@
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>340</x>
+     <x>330</x>
      <y>0</y>
      <width>81</width>
      <height>21</height>
@@ -162,7 +162,7 @@
    <property name="geometry">
     <rect>
      <x>100</x>
-     <y>460</y>
+     <y>440</y>
      <width>511</width>
      <height>161</height>
     </rect>
@@ -172,7 +172,7 @@
    <property name="geometry">
     <rect>
      <x>320</x>
-     <y>430</y>
+     <y>410</y>
      <width>72</width>
      <height>15</height>
     </rect>
@@ -197,7 +197,7 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>300</x>
      <y>340</y>
      <width>111</width>
      <height>21</height>
@@ -210,7 +210,7 @@
   <widget class="QRadioButton" name="FCFS">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>470</y>
      <width>115</width>
      <height>19</height>
@@ -223,7 +223,7 @@
   <widget class="QRadioButton" name="SJF">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>510</y>
      <width>115</width>
      <height>19</height>
@@ -236,7 +236,7 @@
   <widget class="QRadioButton" name="DPTSR">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>550</y>
      <width>115</width>
      <height>19</height>
@@ -297,7 +297,7 @@
   <widget class="QListWidget" name="listWidget">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>120</x>
      <y>370</y>
      <width>441</width>
      <height>31</height>

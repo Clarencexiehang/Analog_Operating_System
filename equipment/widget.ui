@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Widget</class>
+ <widget class="QWidget" name="Widget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>710</width>
+    <height>220</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>710</width>
+    <height>220</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1000</width>
+    <height>300</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Widget</string>
+  </property>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>20</y>
+     <width>373</width>
+     <height>191</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
+    <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QPushButton" name="pro1">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p0</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="pro2">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p1</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pro3">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pro4">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p3</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="pro5">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="pro6">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p5</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QPushButton" name="pro7">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p6</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QPushButton" name="pro8">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p7</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pro9">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p9</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pro10">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p9</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pro11">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p10</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pro12">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p11</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QPushButton" name="pro13">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p12</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QPushButton" name="pro14">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p13</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
+       <widget class="QPushButton" name="pro15">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p14</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="7">
+       <widget class="QPushButton" name="pro16">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p15</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QPushButton" name="pro17">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p16</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pro18">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p17</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pro19">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p18</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="pro20">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p19</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="QPushButton" name="pro22">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p21</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="6">
+       <widget class="QPushButton" name="pro23">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p22</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="7">
+       <widget class="QPushButton" name="pro24">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p23</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="4">
+       <widget class="QPushButton" name="pro21">
+        <property name="minimumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>36</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>p20</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>40</y>
+     <width>341</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <attribute name="horizontalHeaderCascadingSectionResizes">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QPushButton" name="StartButton">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>160</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>100</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="text">
+    <string>开始</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="createPro">
+   <property name="geometry">
+    <rect>
+     <x>440</x>
+     <y>190</y>
+     <width>212</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>随机生成进程序列</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="closeButton">
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>160</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>100</width>
+     <height>30</height>
+    </size>
+   </property>
+   <property name="text">
+    <string>关闭</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>330</x>
+     <y>10</y>
+     <width>72</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>设备管理</string>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
