@@ -1624,22 +1624,22 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font=h1->font();//获取原有字体设置
         font.setBold(true);//设置为粗体
         font.setPointSize(8);//字体大小
-        h1->setTextColor(Qt::red);//字体颜色
+        h1->setBackground(Qt::blue);;//字体颜色
         h1->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(0,h1);
 
         QTableWidgetItem *h2=new QTableWidgetItem("文件名");
-        h2->setTextColor(Qt::red);//字体颜色
+        h2->setBackground(Qt::blue);;//字体颜色
         h2->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(1,h2);
 
         QTableWidgetItem *h3=new QTableWidgetItem("文件大小");
-        h3->setTextColor(Qt::red);//字体颜色
+        h3->setBackground(Qt::blue);;//字体颜色
         h3->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(2,h3);
 
         QTableWidgetItem *h4=new QTableWidgetItem("起始块");
-        h4->setTextColor(Qt::red);//字体颜色
+        h4->setBackground(Qt::blue);;//字体颜色
         h4->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(3,h4);
 
@@ -1674,17 +1674,17 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont fontt=h11->font();//获取原有字体设置
         fontt.setBold(true);//设置为粗体
         fontt.setPointSize(8);//字体大小
-        h11->setTextColor(Qt::red);//字体颜色
+        h11->setBackground(Qt::blue);;//字体颜色
         h11->setFont(fontt);//设置字体
         tbd->setHorizontalHeaderItem(0,h11);
 
         QTableWidgetItem *h22=new QTableWidgetItem("块数");
-        h22->setTextColor(Qt::red);//字体颜色
+        h22->setBackground(Qt::blue);;//字体颜色
         h22->setFont(fontt);//设置字体
         tbd->setHorizontalHeaderItem(1,h22);
 
         QTableWidgetItem *h33=new QTableWidgetItem("扩展起始");
-        h33->setTextColor(Qt::red);//字体颜色
+        h33->setBackground(Qt::blue);;//字体颜色
         h33->setFont(fontt);//设置字体
         tbd->setHorizontalHeaderItem(2,h33);
         //加入数据
@@ -1726,16 +1726,16 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         dr->setRowCount(1);
         //设置表头
         QTableWidgetItem *dh1=new QTableWidgetItem("文件id");
-        dh1->setTextColor(Qt::red);
+        dh1->setBackground(Qt::blue);;
         dr->setHorizontalHeaderItem(0,dh1);
         QTableWidgetItem *dh2=new QTableWidgetItem("文件名");
-        dh2->setTextColor(Qt::red);
+        dh2->setBackground(Qt::blue);;
         dr->setHorizontalHeaderItem(1,dh2);
         QTableWidgetItem *dh3=new QTableWidgetItem("文件大小");
-        dh3->setTextColor(Qt::red);
+        dh3->setBackground(Qt::blue);;
         dr->setHorizontalHeaderItem(2,dh3);
         QTableWidgetItem *dh4=new QTableWidgetItem("起始块");
-        dh4->setTextColor(Qt::red);
+        dh4->setBackground(Qt::blue);;
         dr->setHorizontalHeaderItem(3,dh4);
         //添加数据
         QTableWidgetItem *d0=new QTableWidgetItem(QString::number(fileId));
@@ -1756,7 +1756,7 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font=h1->font();//获取原有字体设置
         font.setBold(true);//设置为粗体
         font.setPointSize(12);//字体大小
-        h1->setTextColor(Qt::red);//字体颜色
+        h1->setBackground(Qt::blue);;//字体颜色
         h1->setFont(font);//设置字体
         tb->setHorizontalHeaderItem(0,h1);
 
@@ -1764,7 +1764,7 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font1=h2->font();//获取原有字体设置
         font1.setBold(true);//设置为粗体
         font1.setPointSize(12);//字体大小
-        h2->setTextColor(Qt::red);//字体颜色
+        h2->setBackground(Qt::blue);;//字体颜色
         h2->setFont(font1);//设置字体
         tb->setHorizontalHeaderItem(1,h2);
 
@@ -1801,22 +1801,22 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font=h1->font();//获取原有字体设置
         font.setBold(true);//设置为粗体
         font.setPointSize(8);//字体大小
-        h1->setTextColor(Qt::red);//字体颜色
+        h1->setBackground(Qt::blue);;//字体颜色
         h1->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(0,h1);
 
         QTableWidgetItem *h2=new QTableWidgetItem("文件名");
-        h2->setTextColor(Qt::red);//字体颜色
+        h2->setBackground(Qt::blue);;//字体颜色
         h2->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(1,h2);
 
         QTableWidgetItem *h3=new QTableWidgetItem("文件大小");
-        h3->setTextColor(Qt::red);//字体颜色
+        h3->setBackground(Qt::blue);;//字体颜色
         h3->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(2,h3);
 
         QTableWidgetItem *h4=new QTableWidgetItem("起始索引块");
-        h4->setTextColor(Qt::red);//字体颜色
+        h4->setBackground(Qt::blue);;//字体颜色
         h4->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(3,h4);
 
@@ -1853,18 +1853,17 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont fontt=h11->font();//获取原有字体设置
         fontt.setBold(true);//设置为粗体
         fontt.setPointSize(8);//字体大小
-        h11->setTextColor(Qt::red);//字体颜色
-        +-
+        h11->setBackground(Qt::blue);;//字体颜色
         h11->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(0,h11);
 
         QTableWidgetItem *h22=new QTableWidgetItem("磁盘块号");
-        h22->setTextColor(Qt::red);//字体颜色
+        h22->setBackground(Qt::blue);;//字体颜色
         h22->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(1,h22);
 
         QTableWidgetItem *h33=new QTableWidgetItem("下一索引块");
-        h33->setTextColor(Qt::red);//字体颜色
+        h33->setBackground(Qt::blue);;//字体颜色
         h33->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(2,h33);
         //加入数据
