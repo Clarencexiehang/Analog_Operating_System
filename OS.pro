@@ -26,7 +26,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    equipment/equipment.cpp \
     memory/memory.cpp \
     process/pcb.cpp \
     process/processdialog.cpp \
@@ -45,12 +44,15 @@ SOURCES += \
     disk/fatfilespacedetail.cpp \
     disk/freeblocktable.cpp \
     disk/indexfilespacedetail.cpp \
-    disk/showfileseekoder.cpp
+    disk/showfileseekoder.cpp \
+    equipment/dequip.cpp \
+    equipment/myprocess.cpp \
+    equipment/request.cpp \
+    equipment/widget.cpp
 
 
 HEADERS += \
     disk/disk.h \
-    equipment/equipment.h \
     file/file.h \
     memory/memory.h \
     process/pcb.h \
@@ -69,13 +71,16 @@ HEADERS += \
     disk/fatfilespacedetail.h \
     disk/freeblocktable.h \
     disk/indexfilespacedetail.h \
-    disk/showfileseekoder.h
+    disk/showfileseekoder.h \
+    equipment/dequip.h \
+    equipment/myprocess.h \
+    equipment/request.h \
+    equipment/widget.h
 
 
 
 FORMS += \
     disk/disk.ui \
-    equipment/equipment.ui \
     file/file.ui \
     memory/memory.ui \
     process/processdialog.ui \
@@ -92,7 +97,11 @@ FORMS += \
     disk/fatfilespacedetail.ui \
     disk/freeblocktable.ui \
     disk/indexfilespacedetail.ui \
-    disk/showfileseekoder.ui
+    disk/showfileseekoder.ui \
+    equipment/dequip.ui \
+    equipment/myprocess.ui \
+    equipment/request.ui \
+    equipment/widget.ui
 
 
 

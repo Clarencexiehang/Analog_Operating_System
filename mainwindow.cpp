@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     processTab=new ProcessTab(this);
     memoryTab=new Memory(this);
     fileTab = new File(this);
-    equipmentTab = new Equipment(this);
+    equipmentTab = new Widget(this);
     diskTab = new Disk(this);
 
 
