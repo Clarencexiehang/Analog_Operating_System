@@ -16,6 +16,7 @@
 #include"showfileseekoder.h"
 #include"freeblocktable.h"
 #include"process/processtab.h"
+#include"file/myfilepro.h"
 
 #include<queue>
 #include<cmath>
@@ -160,7 +161,15 @@ public:
 
     //************************* 新加
     //______________________________
-    //修改磁盘块颜色
+    //设置占用块
+    void setBlockBeFull(int start,int end);
+    //给文件夹分配空间
+    void getSpaceToFolder();
+    //返回磁盘块表
+    QTableWidget *getBlockTable();
+    //占用磁盘块颜色
+    void getBlockColor(int j);
+    //释放磁盘块颜色
     void releaseTabBlockColor(int j);
     //初始化空闲空间表数据
     void flushFreeBlockTab();

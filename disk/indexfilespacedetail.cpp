@@ -7,6 +7,8 @@ indexFileSpaceDetail::indexFileSpaceDetail(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("索引分配详情");
+    ui->indexf_dir_tab->verticalHeader()->setVisible(false);
+    ui->indexblock_tab->verticalHeader()->setVisible(false);
 }
 
 indexFileSpaceDetail::~indexFileSpaceDetail()
