@@ -348,6 +348,7 @@ void Memory::replacePageByFIFO(QString pid,int page){
     }
     //内存空间未满
     if(block->blockSize<block->memeryBlockSize){
+        block->FIFOPageQueue.enqueue(page);
         block->blockSize++;
         block->pageList[block->blockSize-1][0] = page;
         i = block->pageList[block->blockSize-1][1]/20;
@@ -360,25 +361,12 @@ void Memory::replacePageByFIFO(QString pid,int page){
         w->diskTab->replacePage(pid,page);
     }
     else{
-        int k;
-        int minIndex = 101;
-        for(k = 0;k < block->memeryBlockSize;k++){
-            int z;
-            int pageIndex = 100;
-            for(z=0;z<block->requestPageCount-1;z++){
-                if(block->requestPageList[z] == block->pageList[k][0]){
-                    pageIndex = z;
-                }
-
-            }
-            if(minIndex > pageIndex){
-                minIndex = pageIndex;
-            }
-        }
+        int OutPage = block->FIFOPageQueue.dequeue();
+        block->FIFOPageQueue.enqueue(page);
         //取出需要置换的位置
         int index;
         for(index=0;index<block->memeryBlockSize;index++){
-            if(block->pageList[index][0] == block->requestPageList[minIndex]){
+            if(block->pageList[index][0] == OutPage){
                 break;
             }
         }
