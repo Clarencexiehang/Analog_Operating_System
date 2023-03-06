@@ -8,6 +8,7 @@ freeBlockTable::freeBlockTable(QWidget *parent) :
     ui->setupUi(this);
     //***************** 空闲空间列表
     QTableWidget *tbd=ui->freeblock_tab;
+    tbd->verticalHeader()->setVisible(false);
     tbd->setColumnCount(2);
     tbd->setRowCount(200);
     //设置表头

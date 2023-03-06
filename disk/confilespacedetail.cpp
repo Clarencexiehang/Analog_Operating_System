@@ -7,7 +7,8 @@ conFileSpaceDetail::conFileSpaceDetail(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("连续文件空间详情");
-
+    ui->dir_tab->verticalHeader()->setVisible(false);
+    ui->fileblock_tab->verticalHeader()->setVisible(false);
 }
 
 conFileSpaceDetail::~conFileSpaceDetail()

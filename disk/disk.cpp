@@ -24,13 +24,14 @@ Disk::Disk(QWidget *parent) :
     this->initvirtualMemory();
     //初始化磁盘块表格 **********************************
     //行列
+    ui->block_tab->horizontalHeader()->setVisible(false);
     ui->block_tab->setRowCount(8);
     ui->block_tab->setColumnCount(15);
-    for(int i=0;i<20;i++){
-        ui->block_tab->setColumnWidth(i,20);
+    for(int i=0;i<15;i++){
+        ui->block_tab->setColumnWidth(i,25);
     }
-    for(int i=0;i<10;i++){
-        ui->block_tab->setRowHeight(i,20);
+    for(int i=0;i<8;i++){
+        ui->block_tab->setRowHeight(i,25);
     }
     //颜色
     for(int i=0;i<10;i++){
@@ -55,9 +56,15 @@ Disk::Disk(QWidget *parent) :
             diskBlock.append(newBlock);
         }
     }
+    // 占用 块
+    this->setBlockBeFull(0,1);
+    this->setBlockBeFull(7,11);
+    this->setBlockBeFull(40,43);
+    this->setBlockBeFull(80,90);
+
     //磁道  50 个磁道
     for (int i=0;i<diskBlock.size();i++) {
-        int r=i/4;
+        int r=i/15;
         diskBlock[i]->cyId=r;
     }
     //初始化空闲空间表数据**********************************
@@ -176,6 +183,7 @@ void Disk::fileExband(QString policy, QString filename, QString exbandType, QStr
         qDebug()<<"扩展 ："<<exbanSize;
         this->fileToMore(policy,filename,exbanSize);
     }else{
+        qDebug()<<"缩小 ："<<exbanSize;
         this->fileToFew(policy,filename,exbanSize);
     }
 
@@ -276,7 +284,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                         int cc=i%(ui->block_tab->columnCount());
                         qDebug()<<"修改块颜色 ："<<i<<"  r: "<<rr<<" c:"<<cc;
                         QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
-                        tt->setBackground(QBrush(Qt::red));
+                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                         tt->setText(QString::number(diskBlock[i]->fileId));
 
                     }
@@ -394,7 +402,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                         int ccl=nextId%(ui->block_tab->columnCount());
                         QTableWidgetItem *tb=ui->block_tab->item(rcl,ccl);
                         tb->setText(QString::number(id));
-                        tb->setBackground(QBrush(Qt::red));
+                        tb->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                         hasgetSpace=hasgetSpace+10;
                         qDebug()<<"已分配 : "<<hasgetSpace;
 
@@ -489,7 +497,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                     if((diskBlock[i])->fileId==-1){
                         int rr=i/(ui->block_tab->columnCount());
                         int cc=i%(ui->block_tab->columnCount());
-                        qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+                        //qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
                         //设置文件目录的起始索引块位置 并添加到目录中
                         ifd.indexBlockId=i;
                         indexFileDir.append(ifd);
@@ -500,7 +508,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                         diskBlock[i]->fileId=id;
                         //修改颜色
                         QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
-                        tt->setBackground(QBrush(Qt::red));
+                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                         tt->setText(name+"(s)");
                         //修改空闲表___________________________________
                         this->disrtSpaceInFreeTable(i);
@@ -548,7 +556,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                                 int rrr=i/(ui->block_tab->columnCount());
                                 int ccc=i%(ui->block_tab->columnCount());
                                 QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                                tt->setBackground(QBrush(Qt::red));
+                                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                 tt->setText(QString::number(id));
 
                                 qDebug()<<"起始索引块 中磁盘块 __  "<<j<<"分配完成 *********** "<<hasgetSpace;
@@ -587,7 +595,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                                 int rrr=i/(ui->block_tab->columnCount());
                                 int ccc=i%(ui->block_tab->columnCount());
                                 QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                                tt->setBackground(QBrush(Qt::red));
+                                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                 tt->setText(QString::number(id));
                                 //修改空闲表
                                 this->disrtSpaceInFreeTable(i);
@@ -617,7 +625,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                                 diskBlock[i]->fileId=id;
                                 //修改颜色
                                 QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
-                                tt->setBackground(QBrush(Qt::red));
+                                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                 tt->setText(name+"(s)");
                                 //修改空闲表
                                 this->disrtSpaceInFreeTable(i);
@@ -670,7 +678,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                                         int ccc=i%(ui->block_tab->columnCount());
                                         qDebug()<<"修改盘块颜色  "<<rrr<<"  "<<ccc;
                                         QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                                        tt->setBackground(QBrush(Qt::red));
+                                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                         tt->setText(QString::number(id));
                                         //修改空闲表
                                         this->disrtSpaceInFreeTable(i);
@@ -704,7 +712,7 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                                         int ccc=i%(ui->block_tab->columnCount());
                                         qDebug()<<"修改盘块颜色  "<<rrr<<"  "<<ccc;
                                         QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                                        tt->setBackground(QBrush(Qt::red));
+                                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                         tt->setText(QString::number(id));
                                         //修改空闲表
                                         this->disrtSpaceInFreeTable(i);
@@ -721,13 +729,40 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
 
 
             }
+
+//            //++++++++++++++++++++++ 显示虚拟磁盘块信息
+//            for (int i=0;i<indexFiles.size();i++) {
+//                qDebug()<<"bid: "<<indexFiles[i].diskblockId<<"_________________";
+//                qDebug()<<"fid: "<<indexFiles[i].fileId;
+//                qDebug()<<"fname: "<<indexFiles[i].filename;
+//                qDebug()<<"bs: "<<" i0:"<<indexFiles[i].blocksID[0]<<" i1:"<<indexFiles[i].blocksID[1]<<" i2:"<<indexFiles[i].blocksID[2];
+//                qDebug()<<"nextId: "<<indexFiles[i].nextIndexBlockId<<"_________________\n\n";
+//            }
         }
     }
 }
 
 void Disk::fileToFew(QString policy, QString filename, QString exbanSize)
 {
-    qDebug()<<" "<<policy<<" 文件 "<<filename<<" 缩小 "<<exbanSize<<" KB";
+    int blockSize=10;//块大小
+    int blockNum=3;//每个索引块包含磁盘块数 30k
+
+    int fewSize=-exbanSize.toInt();
+    qDebug()<<" "<<policy<<" 文件大小 "<<filename<<" 缩小 "<<fewSize<<" KB";
+
+    int s=fewSize/blockSize;
+    int y=fewSize%blockSize;
+    //所需要释放的块数
+    int releaseBlockNum=y>0?s+1:s;
+    qDebug()<<"需要释放 "<<releaseBlockNum<<" 块=============";
+
+    if(policy=="连续分配"){
+
+    }else if(policy=="显式链接"){
+
+    }else{
+
+    }
 }
 
 
@@ -801,6 +836,52 @@ void Disk::disrtSpaceInFreeTable(int nextId)
     //___________________________
 
 }
+
+void Disk::setBlockBeFull(int start, int end)
+{
+    // 占用
+    for (int i=start;i<=end;i++) {
+        diskBlock[i]->fileId=-3;
+        this->getBlockColor(i);
+    }
+}
+
+void Disk::getSpaceToFolder()
+{
+    //给文件夹分配空间
+    for (int i=0;i<diskBlock.size();i++) {
+        if(diskBlock[i]->fileId==-1){
+            qDebug()<<"//给文件夹分配空间 ::::::::::::::: "<<i;
+            diskBlock[i]->fileId=-3;//文件夹
+            //修改块颜色
+            int rr=i/(this->getBlockTable()->rowCount());
+            int cc=i%(this->getBlockTable()->columnCount());
+            QTableWidgetItem *tt=this->getBlockTable()->item(rr,cc);
+            tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
+            tt->setText("-o");
+            (this->freeblockTab).clear();
+            this->flushFreeBlockTab();
+            break;
+        }
+    }
+}
+
+QTableWidget *Disk::getBlockTable()
+{
+    return ui->block_tab;
+}
+
+void Disk::getBlockColor(int j)
+{
+    //清空磁盘块颜色
+    int rr=(j)/(ui->block_tab->columnCount());
+    int cc=(j)%(ui->block_tab->columnCount());
+    QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
+    tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
+    tt->setText("");
+}
+
+
 Disk::~Disk()
 {
     delete ui;
@@ -808,10 +889,11 @@ Disk::~Disk()
 
 void Disk::distrcFileSpace(int id,QString name,int size,QString policy)
 {
-    qDebug()<<" 文件 "<<id<<"  "<<name<<" 分配 : "<<size<<" KB";
-    qDebug()<<"------------------ 分配策略 ："<<policy;
     int blockSize=10;//块大小
     int blockNum=3;//每个索引块包含磁盘块数 30k
+
+    qDebug()<<" 文件 "<<id<<"  "<<name<<" 分配 : "<<size<<" KB";
+    qDebug()<<"------------------ 分配策略 ："<<policy;
     //获取空闲空间列表表格控件
     QTableWidget *ftb=freeblobktab->getFreeBlockTable();
     //连续分配
@@ -896,9 +978,8 @@ void Disk::conFileDistrc(int id, QString name, int size, QString policy)
                 //修改块颜色
                 int rr=i/(ui->block_tab->columnCount());
                 int cc=i%(ui->block_tab->columnCount());
-                qDebug()<<"修改块颜色 ："<<i<<"  r: "<<rr<<" c:"<<cc;
                 QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
-                tt->setBackground(QBrush(Qt::red));
+                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                 tt->setText(QString::number(diskBlock[i]->fileId));
 
             }
@@ -965,7 +1046,7 @@ void Disk::fatFileDistrc(int id, QString name, int size, QString policy)
             for(int i=0;i<freeblockTab.size();i++){
                 int startBlockId=freeblockTab[i].blockId;
                 int conNum=freeblockTab[i].con_num;
-                qDebug()<<"找到连续块记录： bid:"<<startBlockId<<" conN:"<<conNum;
+               // qDebug()<<"找到连续块记录： bid:"<<startBlockId<<" conN:"<<conNum;
                 for (int j=startBlockId;j<=startBlockId+conNum-1;j++) {
                     (Fat[j]).value=-1;
                 }
@@ -1032,7 +1113,7 @@ void Disk::fatFileDistrc(int id, QString name, int size, QString policy)
                 int ccl=nextId%(ui->block_tab->columnCount());
                 QTableWidgetItem *tb=ui->block_tab->item(rcl,ccl);
                 tb->setText(QString::number(id));
-                tb->setBackground(QBrush(Qt::red));
+                tb->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                 hasgetSpace=hasgetSpace+10;
                 qDebug()<<"已分配 : "<<hasgetSpace;
 
@@ -1110,7 +1191,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
             if((diskBlock[i])->fileId==-1){
                 int rr=i/(ui->block_tab->columnCount());
                 int cc=i%(ui->block_tab->columnCount());
-                qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+                //qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
                 //设置文件目录的起始索引块位置 并添加到目录中
                 ifd.indexBlockId=i;
                 indexFileDir.append(ifd);
@@ -1119,7 +1200,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
                 diskBlock[i]->fileId=id;
                 //修改颜色
                 QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
-                tt->setBackground(QBrush(Qt::red));
+                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                 tt->setText(name+"(s)");
                 //修改空闲表___________________________________
                 this->disrtSpaceInFreeTable(i);
@@ -1167,7 +1248,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
                         int rrr=i/(ui->block_tab->columnCount());
                         int ccc=i%(ui->block_tab->columnCount());
                         QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                        tt->setBackground(QBrush(Qt::red));
+                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                         tt->setText(QString::number(id));
 
                         qDebug()<<"起始索引块 中磁盘块 __  "<<j<<"分配完成 *********** "<<hasgetSpace;
@@ -1206,7 +1287,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
                         int rrr=i/(ui->block_tab->columnCount());
                         int ccc=i%(ui->block_tab->columnCount());
                         QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                        tt->setBackground(QBrush(Qt::red));
+                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                         tt->setText(QString::number(id));
                         //修改空闲表
                         this->disrtSpaceInFreeTable(i);
@@ -1236,7 +1317,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
                         diskBlock[i]->fileId=id;
                         //修改颜色
                         QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
-                        tt->setBackground(QBrush(Qt::red));
+                        tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                         tt->setText(name+"(s)");
                         //修改空闲表
                         this->disrtSpaceInFreeTable(i);
@@ -1289,7 +1370,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
                                 int ccc=i%(ui->block_tab->columnCount());
                                 qDebug()<<"修改盘块颜色  "<<rrr<<"  "<<ccc;
                                 QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                                tt->setBackground(QBrush(Qt::red));
+                                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                 tt->setText(QString::number(id));
                                 //修改空闲表
                                 this->disrtSpaceInFreeTable(i);
@@ -1323,7 +1404,7 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
                                 int ccc=i%(ui->block_tab->columnCount());
                                 qDebug()<<"修改盘块颜色  "<<rrr<<"  "<<ccc;
                                 QTableWidgetItem *tt=ui->block_tab->item(rrr,ccc);
-                                tt->setBackground(QBrush(Qt::red));
+                                tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
                                 tt->setText(QString::number(id));
                                 //修改空闲表
                                 this->disrtSpaceInFreeTable(i);
@@ -1441,8 +1522,17 @@ void Disk::releaseSpace(QString filename, QString policy)
                         //修改磁盘块颜色
                         this->releaseTabBlockColor(j);
                         //重置空闲空间列表数据_________
-                        fileBlocks.remove(i);
+                        freeblockTab.clear();
                         this->flushFreeBlockTab();
+                        //删除文件 PCB
+                        QVector<myFilepro*> *pcbList=w->fileTab->getFileContext();
+                        for (int i=0;i<pcbList->size();i++) {
+                            if(((*pcbList)[i])->name==filename){
+                                (*pcbList).remove(i);
+                                break;
+                            };
+
+                        }
                     }
                     qDebug()<<" i ： "<<i;
                     qDebug()<<" fileBlocks[i].firstBlockId ： "<<fileBlocks[i].firstBlockId;
@@ -1456,19 +1546,20 @@ void Disk::releaseSpace(QString filename, QString policy)
         for (int i=0;i<fatDir.size();i++) {
             qDebug()<<" "<<fatDir[i].filename<<" "<<fatDir[i].first_block;
         }
+        //找到文件的块号
+        int BlockId;
+        for (int i=0;i<fatDir.size();i++) {
+            if(fatDir[i].filename==filename){
+                qDebug()<<" 找到起始块 :"<<BlockId;
+                BlockId=fatDir[i].first_block;
+            }
+        }
         //删除链接文件目录
         for (int i=0;i<fatDir.size();i++) {
             if((fatDir[i]).filename==filename){
                 qDebug()<<" remove fat_dir ____________________ "<<fatDir[i].filename;
                 fatDir.remove(i);
                 break;
-            }
-        }
-        //找到文件的块号
-        int BlockId;
-        for (int i=0;i<fatDir.size();i++) {
-            if(fatDir[i].filename==filename){
-                BlockId=fatDir[i].first_block;
             }
         }
         while (BlockId!=-2) {
@@ -1479,6 +1570,7 @@ void Disk::releaseSpace(QString filename, QString policy)
             //修改磁盘块颜色
             this->releaseTabBlockColor(BlockId);
             //重置空闲空间列表
+            freeblockTab.clear();
             this->flushFreeBlockTab();
 
             BlockId=Fat[BlockId].value;
@@ -1494,6 +1586,13 @@ void Disk::releaseSpace(QString filename, QString policy)
                 break;
             }
         }
+        //删除索引文件目录
+        for (int i=0;i<indexFileDir.size();i++) {
+            if(indexFileDir[i].filename==filename){
+                indexFileDir.remove(i);
+                break;
+            }
+        }
         while (indexBlockId!=-1) {
             //清空索引块所占块
             //清空磁盘块
@@ -1502,7 +1601,8 @@ void Disk::releaseSpace(QString filename, QString policy)
             //修改磁盘块颜色
             this->releaseTabBlockColor(indexBlockId);
             //重置空闲空间列表
-
+            freeblockTab.clear();
+            this->flushFreeBlockTab();
             //索引块不结束
             //寻找里面的每个磁盘块
             for (int i=0;i<blockNum;i++) {
@@ -1513,12 +1613,18 @@ void Disk::releaseSpace(QString filename, QString policy)
                     //清空磁盘块
                     diskBlock[indexFiles[indexBlockId].blocksID[i]]->fileId=-1;
                     diskBlock[indexFiles[indexBlockId].blocksID[i]]->filename="";
+                    //清空虚拟映射块
+                    indexFiles[indexFiles[indexBlockId].blocksID[i]].fileId=-1;
+                    indexFiles[indexFiles[indexBlockId].blocksID[i]].filename="";
                     //修改磁盘块颜色
                     this->releaseTabBlockColor(indexFiles[indexBlockId].blocksID[i]);
                     //重置空闲空间列表
+                    freeblockTab.clear();
                     this->flushFreeBlockTab();
                 }
             }
+            qDebug()<<" indexBBBBB ++++++++++++=:"<<indexBlockId;
+            qDebug()<<" indexFiles[indexBlockId].nextIndexBlockId++++++++++ :"<<indexFiles[indexBlockId].nextIndexBlockId;
             indexBlockId=indexFiles[indexBlockId].nextIndexBlockId;
         }
     }
@@ -1585,7 +1691,7 @@ void Disk::flushFreeBlockTab()
 void Disk::showBlockInfo()
 {
     for(int i=0;i<diskBlock.size();i++){
-        qDebug()<<" bid: "<<diskBlock[i]->blockId<<" fid:"<<diskBlock[i]->fileId<<" fn:"<<diskBlock[i]->filename;
+       // qDebug()<<" bid: "<<diskBlock[i]->blockId<<" fid:"<<diskBlock[i]->fileId<<" fn:"<<diskBlock[i]->filename;
     }
 }
 
@@ -1624,22 +1730,22 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font=h1->font();//获取原有字体设置
         font.setBold(true);//设置为粗体
         font.setPointSize(8);//字体大小
-        h1->setBackground(Qt::blue);;//字体颜色
+        h1->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h1->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(0,h1);
 
         QTableWidgetItem *h2=new QTableWidgetItem("文件名");
-        h2->setBackground(Qt::blue);;//字体颜色
+        h2->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h2->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(1,h2);
 
         QTableWidgetItem *h3=new QTableWidgetItem("文件大小");
-        h3->setBackground(Qt::blue);;//字体颜色
+        h3->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h3->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(2,h3);
 
         QTableWidgetItem *h4=new QTableWidgetItem("起始块");
-        h4->setBackground(Qt::blue);;//字体颜色
+        h4->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h4->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(3,h4);
 
@@ -1674,17 +1780,17 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont fontt=h11->font();//获取原有字体设置
         fontt.setBold(true);//设置为粗体
         fontt.setPointSize(8);//字体大小
-        h11->setBackground(Qt::blue);;//字体颜色
+        h11->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h11->setFont(fontt);//设置字体
         tbd->setHorizontalHeaderItem(0,h11);
 
         QTableWidgetItem *h22=new QTableWidgetItem("块数");
-        h22->setBackground(Qt::blue);;//字体颜色
+        h22->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h22->setFont(fontt);//设置字体
         tbd->setHorizontalHeaderItem(1,h22);
 
         QTableWidgetItem *h33=new QTableWidgetItem("扩展起始");
-        h33->setBackground(Qt::blue);;//字体颜色
+        h33->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h33->setFont(fontt);//设置字体
         tbd->setHorizontalHeaderItem(2,h33);
         //加入数据
@@ -1726,16 +1832,16 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         dr->setRowCount(1);
         //设置表头
         QTableWidgetItem *dh1=new QTableWidgetItem("文件id");
-        dh1->setBackground(Qt::blue);;
+        dh1->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;
         dr->setHorizontalHeaderItem(0,dh1);
         QTableWidgetItem *dh2=new QTableWidgetItem("文件名");
-        dh2->setBackground(Qt::blue);;
+        dh2->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;
         dr->setHorizontalHeaderItem(1,dh2);
         QTableWidgetItem *dh3=new QTableWidgetItem("文件大小");
-        dh3->setBackground(Qt::blue);;
+        dh3->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;
         dr->setHorizontalHeaderItem(2,dh3);
         QTableWidgetItem *dh4=new QTableWidgetItem("起始块");
-        dh4->setBackground(Qt::blue);;
+        dh4->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;
         dr->setHorizontalHeaderItem(3,dh4);
         //添加数据
         QTableWidgetItem *d0=new QTableWidgetItem(QString::number(fileId));
@@ -1756,7 +1862,7 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font=h1->font();//获取原有字体设置
         font.setBold(true);//设置为粗体
         font.setPointSize(12);//字体大小
-        h1->setBackground(Qt::blue);;//字体颜色
+        h1->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h1->setFont(font);//设置字体
         tb->setHorizontalHeaderItem(0,h1);
 
@@ -1764,7 +1870,7 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font1=h2->font();//获取原有字体设置
         font1.setBold(true);//设置为粗体
         font1.setPointSize(12);//字体大小
-        h2->setBackground(Qt::blue);;//字体颜色
+        h2->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h2->setFont(font1);//设置字体
         tb->setHorizontalHeaderItem(1,h2);
 
@@ -1801,22 +1907,22 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont font=h1->font();//获取原有字体设置
         font.setBold(true);//设置为粗体
         font.setPointSize(8);//字体大小
-        h1->setBackground(Qt::blue);;//字体颜色
+        h1->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h1->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(0,h1);
 
         QTableWidgetItem *h2=new QTableWidgetItem("文件名");
-        h2->setBackground(Qt::blue);;//字体颜色
+        h2->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h2->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(1,h2);
 
         QTableWidgetItem *h3=new QTableWidgetItem("文件大小");
-        h3->setBackground(Qt::blue);;//字体颜色
+        h3->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h3->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(2,h3);
 
         QTableWidgetItem *h4=new QTableWidgetItem("起始索引块");
-        h4->setBackground(Qt::blue);;//字体颜色
+        h4->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h4->setFont(font);//设置字体
         dtb->setHorizontalHeaderItem(3,h4);
 
@@ -1853,22 +1959,26 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
         QFont fontt=h11->font();//获取原有字体设置
         fontt.setBold(true);//设置为粗体
         fontt.setPointSize(8);//字体大小
-        h11->setBackground(Qt::blue);;//字体颜色
+        h11->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h11->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(0,h11);
 
         QTableWidgetItem *h22=new QTableWidgetItem("磁盘块号");
-        h22->setBackground(Qt::blue);;//字体颜色
+        h22->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h22->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(1,h22);
 
         QTableWidgetItem *h33=new QTableWidgetItem("下一索引块");
-        h33->setBackground(Qt::blue);;//字体颜色
+        h33->setBackground(QColor(color1[6][0],color1[6][1],color1[6][2]));;//字体颜色
         h33->setFont(fontt);//设置字体
         tgg->setHorizontalHeaderItem(2,h33);
         //加入数据
         int indexNum=0;
         while (true) { //索引块不结束
+            if(nextb==-1){
+                break;
+            }
+
             qDebug()<<"fid:"<<fid<<"  nextb:"<<nextb;
             qDebug()<<"表 r:"<<indexNum<<" c:"<<0<<" 添加 "<<fid;
             QTableWidgetItem *df1=new QTableWidgetItem;
@@ -1904,99 +2014,43 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
 
 
 /*****************************************************  磁盘调度  **************************************************************/
-int * Disk::disk_sheduling(QVector<int> seq){
-    int n = seq.size();
-    int start = 1;
-    int xb;
-    const int INF = 0x3f3f3f3f;
-    double avgfind;
-    typedef pair<int, int> p;
-    vector<p> v;
+//int* Disk::disk_sheduling(QVector<int> seq){
 
-    sort(seq.begin(), seq.end());
-
-   if(seq[0] > start) {
-       v.push_back({seq[0], abs(seq[0] - start)});
-       avgfind += abs(seq[0] - start);
-       start = seq[0];
-
-       xb = 1;
-
-       for(int i = xb; i < seq.size(); i ++) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-   }
-   else if(seq[n - 1] < start) {
-       v.push_back({seq[n - 1], abs(start - seq[n - 1])});
-       avgfind += abs(start - seq[n - 1]);
-       xb = n - 2;
-       start = seq[n - 1];
-
-       for(int i = xb; i >= 0; i --) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-
-   } else {
-       for(int i = 0; i < seq.size() - 1; i ++) {
-       if(seq[i + 1] > start && seq[i] < start) {
-           v.push_back({seq[i + 1], abs(seq[i + 1] - start)});
-           avgfind += abs(seq[i + 1] - start);
-           start = seq[i + 1];
-           xb = (i + 2 > seq.size()) ? seq.size() : (i + 2);
-           break;
-       }
-   }
-        for(int i = xb; i < seq.size(); i ++) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-       for(int i = xb - 2; i >= 0; i --) {
-           v.push_back({seq[i], abs(seq[i] - start)});
-           avgfind += abs(seq[i] - start);
-           start = seq[i];
-       }
-   }
-
-//       cout << "磁道号\t移动距离" << "\n";
-//       for(int i = 0; i < v.size(); i ++) {
-//           cout << v[i].first << "\t" << v[i].second << "\n";
-//       }
-//       cout << "总长度：" <<endl;
-//       printf("%.2lf\n", avgfind);
-//       cout << "平均寻道长度：" <<endl;
-//       printf("%.2lf", avgfind / temp);
-   int track[100];
-   for(int i = 0; i < v.size(); i ++){
-       track[i] = v[i].first;
-   }
-   return track;
-}
+//   return track;
+//}
 
 void Disk::ShowDiskTrack(int track_num){
-    //恢复
-    for(int i=0;i<diskBlock.size();i++){
+    //初始磁盘块表格
+    for(int j=0;j<15;j++){
+        QTableWidgetItem *t=ui->block_tab->item(track_num,j);
+        //t->setText(QString::number(-1));
+        //qDebug()<<"找到起始索引块位置 ：";
+        t->setBackground(QBrush(QColor(color1[2][0],color1[2][1],color1[2][2])));
+    }
+ QCoreApplication::processEvents();
+    QElapsedTimer t1;
+    //延时1s
+    t1.start();
+    while(t1.elapsed()<500);
+    int i;
+
+    for(i=0;i < diskBlock.size();i++){
         int rr=i/(ui->block_tab->columnCount());
         int cc=i%(ui->block_tab->columnCount());
         QTableWidgetItem *tt=ui->block_tab->item(rr,cc);
         tt->setBackground(QBrush(Qt::gray));
         if((diskBlock[i])->fileId!=-1){
             //修改颜色
-            tt->setBackground(QBrush(Qt::red));
+            tt->setBackground(QBrush(QColor(color1[6][0],color1[6][1],color1[6][2])));
             tt->setText(QString::number(diskBlock[i]->fileId));
+//            qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc; qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
         }
+//        qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
+        if(i == 119) {
+             break;
+        };
     }
-    //初始磁盘块表格
-    for(int j=0;j<20;j++){
-        QTableWidgetItem *t=new QTableWidgetItem;
-        //t->setText(QString::number(-1));
-        t->setBackground(QBrush(QColor(color1[2][0],color1[2][1],color1[2][2])));
-        ui->block_tab->setItem(track_num,j,t);
-    }
+     QCoreApplication::processEvents();
 }
 
 

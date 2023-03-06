@@ -7,7 +7,8 @@ fatFileSpaceDetail::fatFileSpaceDetail(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("显式链接分配详情");
-
+    ui->fat_tab->verticalHeader()->setVisible(false);
+    ui->fat_dir_tab->verticalHeader()->setVisible(false);
 }
 
 fatFileSpaceDetail::~fatFileSpaceDetail()
