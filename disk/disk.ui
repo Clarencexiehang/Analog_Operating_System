@@ -22,7 +22,7 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>200</x>
+     <x>160</x>
      <y>10</y>
      <width>72</width>
      <height>15</height>
@@ -35,9 +35,9 @@
   <widget class="QTableWidget" name="virtualMemory">
    <property name="geometry">
     <rect>
-     <x>465</x>
+     <x>425</x>
      <y>31</y>
-     <width>241</width>
+     <width>291</width>
      <height>211</height>
     </rect>
    </property>
@@ -45,7 +45,7 @@
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>570</x>
+     <x>550</x>
      <y>10</y>
      <width>69</width>
      <height>20</height>
@@ -60,7 +60,7 @@
     <rect>
      <x>0</x>
      <y>30</y>
-     <width>451</width>
+     <width>421</width>
      <height>221</height>
     </rect>
    </property>

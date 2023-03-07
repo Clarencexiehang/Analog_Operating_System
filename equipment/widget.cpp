@@ -56,7 +56,7 @@ void Widget::on_createPro_clicked()
         while (proc[i].getPrint > proc[i].print){
             proc[i].getPrint = rand() % 5;
         }
-        qDebug() << proc[i].bluetooth;
+        //qDebug() << proc[i].bluetooth;
     }
     QMessageBox::information(this, "提示", "生成成功！");
     for (int i = 0; i < 24; i++){

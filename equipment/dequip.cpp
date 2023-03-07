@@ -151,11 +151,11 @@ bool Dequip::security(int pId){
         if (i == pId) continue;
         if (Finished[i] == false){
             for (int j = 0; j < 24; j++){
-                qDebug() <<Finished[j];
+                //qDebug() <<Finished[j];
             }
             return false;
         }
     }
-    qDebug()<<"yyy";
+    //qDebug()<<"yyy";
     return true;
 }

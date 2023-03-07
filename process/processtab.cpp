@@ -194,7 +194,7 @@ void ProcessTab::on_deleteprocess_clicked()
         return ;
     }
 //    qDebug()<<"pid:"<<ui->processtable->item(currentRow,0)->text();
-    w->memoryTab->freeMemery(ui->processtable->item(currentRow,0)->text());
+    w->memoryTab->freeMemery(ui->processtable->item(currentRow,0)->text());     //释放内存物理块
     ui->processtable->removeRow(currentRow);
 
 }
@@ -226,6 +226,11 @@ void ProcessTab::on_reset_clicked()
             w->memoryTab->freeMemery(QString::fromStdString( processQueue[i]->name));
         }
     }
+    this->semaphore_keyboard = 1;
+    this->semaphore_full = 0;
+    this->mutex = 1;
+    this->isUsed1 = false;
+    this->isUsed2 = false;
     readyQueue.clear();
     processQueue.clear();
     Random_Create_PCB();
@@ -240,7 +245,7 @@ void ProcessTab::on_reset_clicked()
 void ProcessTab::FCFS(){
 h:
     while(!readyQueue.empty() || !blockQueue.empty() || !runningQueue.empty()){
-        PCB *runOne = readyQueue[0];    //qDebug()<<"ready"<<readyQueue.size();
+        PCB *runOne = readyQueue[0];    
         readyQueue.erase(readyQueue.begin());
         runningQueue.push_back(runOne);
         this->showQueue();
