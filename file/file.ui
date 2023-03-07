@@ -35,10 +35,10 @@
   <widget class="QPushButton" name="mag_createfile">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>50</y>
-     <width>181</width>
-     <height>50</height>
+     <x>490</x>
+     <y>160</y>
+     <width>201</width>
+     <height>34</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -57,10 +57,10 @@
   <widget class="QPushButton" name="mag_createfoler">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>120</y>
-     <width>181</width>
-     <height>50</height>
+     <x>490</x>
+     <y>210</y>
+     <width>201</width>
+     <height>34</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -80,8 +80,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>50</y>
-     <width>481</width>
+     <y>90</y>
+     <width>451</width>
      <height>471</height>
     </rect>
    </property>
@@ -97,10 +97,10 @@
   <widget class="QPushButton" name="del_file">
    <property name="geometry">
     <rect>
-     <x>520</x>
-     <y>190</y>
-     <width>181</width>
-     <height>50</height>
+     <x>490</x>
+     <y>260</y>
+     <width>201</width>
+     <height>34</height>
     </rect>
    </property>
    <property name="minimumSize">
@@ -115,6 +115,47 @@
    <property name="text">
     <string>删除文件</string>
    </property>
+  </widget>
+  <widget class="QLineEdit" name="search_txt">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>40</y>
+     <width>291</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="search_btn">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>40</y>
+     <width>151</width>
+     <height>34</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color: rgb(0, 85, 255);</string>
+   </property>
+   <property name="text">
+    <string>搜索</string>
+   </property>
+  </widget>
+  <widget class="QTreeWidget" name="search_res_tree">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>40</y>
+     <width>221</width>
+     <height>101</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string notr="true">1</string>
+    </property>
+   </column>
   </widget>
  </widget>
  <resources/>

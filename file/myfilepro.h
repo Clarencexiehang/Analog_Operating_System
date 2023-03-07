@@ -14,6 +14,7 @@ public:
     QString name;
     QString pos;
     QString size;
+    int blockNum=0;
     QString time;
     QString policy;
     //内容

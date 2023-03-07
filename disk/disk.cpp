@@ -64,7 +64,7 @@ Disk::Disk(QWidget *parent) :
 
     //磁道  50 个磁道
     for (int i=0;i<diskBlock.size();i++) {
-        int r=i/15;
+        int r=i/15+1;
         diskBlock[i]->cyId=r;
     }
     //初始化空闲空间表数据**********************************
@@ -187,6 +187,11 @@ void Disk::fileExband(QString policy, QString filename, QString exbandType, QStr
         this->fileToFew(policy,filename,exbanSize);
     }
 
+    qDebug()<<" PCB __________________ ";
+    QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+    for (int i=0;i<pcb.size();i++) {
+        qDebug()<<" name:"<<pcb[i]->name<<"  size:"<<pcb[i]->blockNum;
+    }
 
     this->showBlockInfo();
     this->showFreeData();
@@ -197,8 +202,6 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
     int size=exbanSize.toInt();
     if(size!=0){
         qDebug()<<" "<<policy<<" 文件 "<<filename<<" 扩展 "<<size<<" KB";
-        //_____________________
-
         //
         int blockSize=10;//块大小
         int blockNum=3;//每个索引块包含磁盘块数 30k
@@ -229,12 +232,6 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                         conMinPos=freeblockTab[i].blockId;
                         minConNum=freeblockTab[i].con_num;
                         break;
-                        //最佳适配法
-    //                    if(freeblockTab[i].con_num<minConNum){
-    //                        minConindex=i;
-    //                        conMinPos=freeblockTab[i].blockId;
-    //                        minConNum=freeblockTab[i].con_num;
-    //                    }
                     }
                 }
                 qDebug()<<"找到最小连续块记录  index:"<<minConindex<<" blockId:"<<conMinPos<<" num:"<<minConNum;
@@ -262,6 +259,14 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                 }
                 //上一个文件块结尾修改记录
                 fileBlocks[endIndex].nextBlockId=conMinPos;
+                //
+                //修改文件大小
+                QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+                for (int i=0;i<pcb.size();i++) {
+                    if(pcb[i]->name==filename){
+                        pcb[i]->blockNum=pcb[i]->blockNum+needNum;
+                    }
+                }
                 //文件块表添加记录
                 FileBlock fb;
                 fb.firstBlockId=conMinPos;
@@ -333,6 +338,16 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                 }
                 else{
                     qDebug()<<"开始显式链接分配 FAT ："<<policy;
+                    //修改文件大小
+                    int ms=size/blockSize;
+                    int my=size%blockSize;
+                    int needNum=my>0?(ms+1):ms;
+                    QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+                    for (int i=0;i<pcb.size();i++) {
+                        if(pcb[i]->name==filename){
+                            pcb[i]->blockNum=pcb[i]->blockNum+needNum;
+                        }
+                    }
                     //目录中找到首块号
                     int id;
                     int lafirstId;
@@ -486,6 +501,16 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
                     }
                     ind.nextIndexBlockId=-1;
                     indexFiles.append(ind);
+                }
+                //修改文件大小
+                int ms=size/blockSize;
+                int my=size%blockSize;
+                int needNum=my>0?(ms+1):ms;
+                QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+                for (int i=0;i<pcb.size();i++) {
+                    if(pcb[i]->name==filename){
+                        pcb[i]->blockNum=pcb[i]->blockNum+needNum;
+                    }
                 }
                 //新建文件目录
                 IndexDir ifd;
@@ -729,15 +754,6 @@ void Disk::fileToMore(QString policy, QString filename, QString exbanSize)
 
 
             }
-
-//            //++++++++++++++++++++++ 显示虚拟磁盘块信息
-//            for (int i=0;i<indexFiles.size();i++) {
-//                qDebug()<<"bid: "<<indexFiles[i].diskblockId<<"_________________";
-//                qDebug()<<"fid: "<<indexFiles[i].fileId;
-//                qDebug()<<"fname: "<<indexFiles[i].filename;
-//                qDebug()<<"bs: "<<" i0:"<<indexFiles[i].blocksID[0]<<" i1:"<<indexFiles[i].blocksID[1]<<" i2:"<<indexFiles[i].blocksID[2];
-//                qDebug()<<"nextId: "<<indexFiles[i].nextIndexBlockId<<"_________________\n\n";
-//            }
         }
     }
 }
@@ -757,6 +773,87 @@ void Disk::fileToFew(QString policy, QString filename, QString exbanSize)
     qDebug()<<"需要释放 "<<releaseBlockNum<<" 块=============";
 
     if(policy=="连续分配"){
+        //找到文件总块数
+        int allBlockNum;
+        QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+        for (int i=0;i<pcb.size();i++) {
+            if(pcb[i]->name==filename){
+                allBlockNum=pcb[i]->blockNum;
+                break;
+            }
+        }
+        //目录内找到起始块
+        int confBlockId;
+        for (int i=0;i<confiledir.size();i++) {
+            if(confiledir[i].filename==filename){
+                confBlockId=confiledir[i].first_block;
+            }
+        }
+        //文件块表内找到最后一个块记录 (下一扩展块值 -2)
+        int bpt=confBlockId;//块遍历指针
+        int hasgetNum=0;//已遍历块数
+        int sxNum=allBlockNum;//剩下块数
+        int endIndex=0;
+        bool end=false;//是否遍历结束
+        int logId;//
+        int preBlockId=confBlockId;//上一个文件记录块块号
+        int logInIndex;//块内号
+        while (confBlockId!=-2) {
+            if(end==true){
+                break;
+            }
+            for (int i=0;i<fileBlocks.size();i++) {
+                if(fileBlocks[i].firstBlockId==confBlockId){
+                    //遍历每个文件块里面每个磁盘块
+                    for (int j=fileBlocks[i].firstBlockId;j<=fileBlocks[i].firstBlockId+fileBlocks[i].blockNum-1;j++) {
+                        logInIndex=j;
+                        hasgetNum+=1;
+                        bpt=j;
+                        sxNum-=1;
+                        qDebug()<<"遍历 i:"<<i<<"  j: "<<j<<"  sxNum ："<<sxNum<<" releaseBlockNum :"<<releaseBlockNum;
+                        if(sxNum==releaseBlockNum){
+                            preBlockId=confBlockId;
+                            logId=i;
+                            end=true;
+                            break;
+                        }
+                    }
+                    endIndex=i;
+                    break;
+                }
+            }
+            confBlockId=fileBlocks[endIndex].nextBlockId;
+        }
+        qDebug()<<"文件块记录里序号："<<logId<<" 上一个号 :"<<preBlockId<<" 块内索引："<<logInIndex;
+        //文件块记录里找到该记录的上一个块索引
+        int iindex;
+        for (int i=0;i<fileBlocks.size();i++) {
+            if(fileBlocks[i].nextBlockId==preBlockId){
+                iindex=i;
+                break;
+            }
+        }
+        if(logInIndex==preBlockId){
+            //刚好从这个记录块整体往后删除
+            fileBlocks[iindex].nextBlockId=-2;
+            //递归删除磁盘块
+            int start=preBlockId;
+            while (start!=-2) {
+                for (int i=0;i<fileBlocks.size();i++) {
+                    if(fileBlocks[i].firstBlockId==start){
+                        //遍历每个文件块里面每个磁盘块
+                        for (int j=fileBlocks[i].firstBlockId;j<=fileBlocks[i].firstBlockId+fileBlocks[i].blockNum-1;j++) {
+                            //释放块
+                            diskBlock[j]->fileId=-1;
+                            diskBlock[j]->filename="";
+                            this->releaseTabBlockColor(j);
+                            this->flushFreeBlockTab();
+                        }
+                    }
+                }
+                start=fileBlocks[endIndex].nextBlockId;
+            }
+        }
 
     }else if(policy=="显式链接"){
 
@@ -906,11 +1003,6 @@ void Disk::distrcFileSpace(int id,QString name,int size,QString policy)
         this->indexFileDistrc(id,name,size,policy);
     }
 
-    //___________________
-    qDebug()<<"空闲空间列表 ;;;;;;;;;;;;;;;;;;;;;; ";
-    for (int i=0;i<freeblockTab.size();i++) {
-        qDebug()<<freeblockTab[i].blockId<<" "<<freeblockTab[i].con_num;
-    }
 }
 
 //__________________________________________ 连续文件分配
@@ -956,6 +1048,13 @@ void Disk::conFileDistrc(int id, QString name, int size, QString policy)
         fileBlocks.append(fb);
 
         if(hasConBlock==true){
+            //修改文件大小
+            QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+            for (int i=0;i<pcb.size();i++) {
+                if(pcb[i]->name==name){
+                    pcb[i]->blockNum=pcb[i]->blockNum+needNum;
+                }
+            }
             //添加文件目录
             conFileDir nconfdir;
             nconfdir.fileId=id;
@@ -1055,6 +1154,17 @@ void Disk::fatFileDistrc(int id, QString name, int size, QString policy)
             for(int i=0;i<Fat.size();i++){
                 qDebug()<<"FAT 记录 ："<<i<<" v: "<<Fat[i].value;
             }
+            //修改文件大小
+            int s=size/blockSize;
+            int y=size%blockSize;
+            int needNum=y>0?s+1:s;
+            QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+            for (int i=0;i<pcb.size();i++) {
+                if(pcb[i]->name==name){
+                    pcb[i]->blockNum=pcb[i]->blockNum+needNum;
+                }
+            }
+
             //文件策略加入
             FilePolicy po;
             po.fileId=id;
@@ -1147,6 +1257,18 @@ void Disk::indexFileDistrc(int id, QString name, int size, QString policy)
         QMessageBox::critical(this,"分配失败",tr("剩余空间不足 ！"));
     }else{
         qDebug()<<"剩余空间足够，开始分配...";
+        //
+        //修改文件大小
+        int st=size/blockSize;
+        int yt=size%blockSize;
+        int needNum=yt>0?st+1:st;
+        QVector<myFilepro*> pcb=*(w->fileTab->getFileContext());
+        for (int i=0;i<pcb.size();i++) {
+            if(pcb[i]->name==name){
+                pcb[i]->blockNum=pcb[i]->blockNum+needNum;
+            }
+        }
+
         //文件策略表添加
         FilePolicy nf;
         nf.fileId=id;

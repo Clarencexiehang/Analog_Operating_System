@@ -55,6 +55,11 @@ public slots:
     QVector<myFilepro*> *getFileContext();
 
 
+private slots:
+    void on_search_btn_clicked();
+
+    void on_search_res_tree_doubleClicked(const QModelIndex &index);
+
 private:
     Ui::File *ui;
     QTreeWidgetItem *pCurrentItem;

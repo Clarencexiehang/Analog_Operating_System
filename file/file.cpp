@@ -10,11 +10,17 @@ File::File(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    ui->search_txt->setPlaceholderText("输入文件名");
     //初始化 文件信息 数组
     filepros=new QVector<myFilepro*>;
     ui->filetree->headerItem()->setText(0,"文件名");
     ui->filetree->headerItem()->setText(1,"类型");
     ui->filetree->headerItem()->setText(2,"日期");
+    //
+    ui->search_res_tree->headerItem()->setText(0,"文件名");
+    ui->search_res_tree->headerItem()->setText(1,"大小");
+    ui->search_res_tree->headerItem()->setText(2,"日期");
+
     //新建目录
     for (int i=1;i<=5;i++) {
         QTreeWidgetItem *rootItem1=new QTreeWidgetItem(ui->filetree);
@@ -231,3 +237,46 @@ QVector<myFilepro *> *File::getFileContext()
 }
 
 
+
+void File::on_search_btn_clicked()
+{
+    ui->search_res_tree->clear();
+    QString filename=ui->search_txt->text();
+    bool findFile=false;
+    QString policy;
+    for (int i=0;i<(w->diskTab->fpol).size();i++) {
+        if((w->diskTab->fpol)[i].filename==filename){
+            findFile=true;
+            policy=(w->diskTab->fpol)[i].policy;
+        }
+    }
+    if(findFile==true){
+        QTreeWidgetItem* root=new QTreeWidgetItem(ui->search_res_tree);
+        root->setText(0,filename);
+    }else{
+        //
+        QTreeWidgetItem* root=new QTreeWidgetItem(ui->search_res_tree);
+        root->setText(0,"未找到文件");
+    }
+}
+
+void File::on_search_res_tree_doubleClicked(const QModelIndex &index)
+{
+    contextWind=new FileContext;
+    contextWind->setFileName(pCurrentItem->text(0));
+    contextWind->show();
+
+    //获取当前目录
+    pCurrentItem=ui->search_res_tree->currentItem();
+    qDebug()<<"打开文件 ： "<<pCurrentItem->text(0);
+    //在文件记录中根据文件名找文件分配策略
+    QString policy;
+    QVector<myFilepro*>::iterator iter;
+    for (iter=filepros->begin();iter!=filepros->end();iter++){
+        if((*iter)->name==pCurrentItem->text(0)){
+               policy=(*iter)->policy;
+               break;
+        }
+    }
+    this->disk->geentFileSeekWind(pCurrentItem->text(0),policy);
+}
