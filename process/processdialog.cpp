@@ -47,7 +47,7 @@ void processDialog::on_pushButton_ok_clicked()
         return ;
     }
 
-    //根据优先级排序，放入就绪队列
+    //放入就绪队列
     extern MainWindow *w;
     w->processTab->processQueue.push_back(process);
     w->processTab->readyQueue.push_back(process);
