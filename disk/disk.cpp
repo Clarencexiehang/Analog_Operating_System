@@ -2136,13 +2136,9 @@ void Disk::LookFileSpace(int id, QString name,QString type,QString pos,int size,
 
 
 /*****************************************************  磁盘调度  **************************************************************/
-//int* Disk::disk_sheduling(QVector<int> seq){
-
-//   return track;
-//}
-
 void Disk::ShowDiskTrack(int track_num){
     //初始磁盘块表格
+    track_num--;
     for(int j=0;j<15;j++){
         QTableWidgetItem *t=ui->block_tab->item(track_num,j);
         //t->setText(QString::number(-1));
@@ -2167,12 +2163,9 @@ void Disk::ShowDiskTrack(int track_num){
             tt->setText(QString::number(diskBlock[i]->fileId));
 //            qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc; qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
         }
-//        qDebug()<<"找到起始索引块位置 ："<<i<<"  r: "<<rr<<" c:"<<cc;
         if(i == 119) {
              break;
         };
     }
      QCoreApplication::processEvents();
 }
-
-
