@@ -2146,8 +2146,8 @@ void Disk::ShowDiskTrack(int track_num){
     for(int j=0;j<15;j++){
         QTableWidgetItem *t=ui->block_tab->item(track_num,j);
         //t->setText(QString::number(-1));
-        //qDebug()<<"找到起始索引块位置 ：";
-        t->setBackground(QBrush(QColor(color1[2][0],color1[2][1],color1[2][2])));
+        //qDebug()<<"track num!!!!! ："<<track_num;
+        t->setBackground(QBrush(Qt::red));
     }
  QCoreApplication::processEvents();
     QElapsedTimer t1;

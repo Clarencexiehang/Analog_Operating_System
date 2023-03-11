@@ -570,9 +570,6 @@ void ProcessTab::Create_Process_For_Synchronization(){
 /**************************************** 文件系统和磁盘调度访问磁道号顺序 *************************************************/
 void ProcessTab::Create_Process_For_File(QVector<int> seq){
     PCB* file = new PCB("file");
-    for(int i = 0; i < seq.size(); i ++){
-       qDebug()<<"seq:"<<seq[i];
-    }
 
     file->needTime = seq.size();
     strcpy( file->state, "运行");
@@ -597,22 +594,23 @@ void ProcessTab::Create_Process_For_File(QVector<int> seq){
         total_mov_distance = seq[num-1]-start_index;
     }else if(start_index > seq[num-1]){
         for (int i=seq.size()-1;i>= 0;i--) {
-            file->track[i] = seq[i];
+            file->track[seq.size()-i-1] = seq[i];
         }
         total_mov_distance = start_index-seq[0];
     }else{
         //找到磁头在哪个具体位置
         for (int i=0;i<seq.size();i++) {
             int index = 0;
-            if(seq[i]<start_index && seq[i+1]>=start_index){
+            if(seq[i]==start_index){
                 //先向右扫描
-                for (int j=i+1;j<seq.size();j++) {
+                for (int j=i;j<seq.size();j++) {
                     file->track[index++] = seq[j];
                 }
                 //然后向左扫描
-                for (int j=0;j<i+1;j++) {
+                for (int j=i-1;j>=0;j--) {
                     file->track[index++] = seq[j];
                 }
+                break;
             }
         }
         total_mov_distance = seq[num-1]-seq[0]+seq[num-1]-start_index;
